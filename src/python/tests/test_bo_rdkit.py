@@ -31,7 +31,8 @@ class TestBoRdkit:
         assert self.bo._calculate_tpsa(self.mol) == 37.3
 
     def test_calculate_pka(self):
-        assert self.bo._calculate_pka(self.mol) == None
+        res = self.bo._calculate_pka(self.mol)
+        assert 'acidic' in res
 
     def test_calcualte_heavy_atom_count(self):
         assert self.bo._calculate_heavy_atom_count(self.mol) == 15

@@ -5,7 +5,7 @@ import requests
 from rdkit import Chem
 from rdkit.Chem import Draw
 from rdkit.Chem import Descriptors
-#from .pka.predictor import PkaPredictor
+from .pka.predictor import PkaPredictor
 
 class RDKitOperation(BusinessOperation):
     """
@@ -92,16 +92,16 @@ class RDKitOperation(BusinessOperation):
         """
         return Descriptors.TPSA(mol)
 
-    def _calculate_pka(self, mol:Chem.Mol) -> list:
+    def _calculate_pka(self, mol:Chem.Mol) -> dict:
         """
         Returns a list of pKa values for the molecule.
 
         :param mol: The molecule to calculate pKa values for.
         :return: A list of pKa values for the molecule.
         """
-        # pka_predictor = PkaPredictor()
-        # pka = pka_predictor.predict(mol)
-        return None
+        pka_predictor = PkaPredictor()
+        pka = pka_predictor.predict([mol])
+        return pka[0]
 
     def _calculate_num_h_donor(self, mol:Chem.Mol) -> int:
         """
@@ -169,8 +169,6 @@ if __name__ == "__main__":
     rd = RDKitOperation()
     mols = Chem.SDMolSupplier("/Users/grongier/git/iris-chemicals-properties/misc/data/ibuprofen-3D-structure-CT1078642946.sdf")
     mol = mols[0]
-    pp = mol.GetPropsAsDict()
-    print(pp)
 
     properties = rd._get_properties(mol)
     print(properties)
