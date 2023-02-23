@@ -9,15 +9,6 @@ from rdkit.Chem import Descriptors
 
 from grongier.pex import BusinessProcess,Message
 
-@dataclass
-class SmilesRequest(Message):
-    smiles:str = None
-
-@dataclass
-class SmilesResponse(Message):
-    image:bytes = None
-    properties:dict = None
-
 class ChemBase:
     """
     This class is used to 

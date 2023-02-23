@@ -5,7 +5,9 @@ import requests
 from rdkit import Chem
 from rdkit.Chem import Draw
 from rdkit.Chem import Descriptors
-from .pka.predictor import PkaPredictor
+
+from msg import SmilesRequest, SmilesResponse, PkaRequest
+from obj import MolProperties
 
 class RDKitOperation(BusinessOperation):
     """
@@ -13,6 +15,18 @@ class RDKitOperation(BusinessOperation):
         get the properties of a molecule
         get the image of a molecule
     """
+
+    def get_properties_from_smiles(self, request: SmilesRequest) -> dict:
+        """
+        Returns a dictionary of properties for the molecule.
+
+        :param smiles: The smiles of the molecule to calculate properties for.
+        :return: A dictionary of properties for the molecule.
+        """
+        mol = Chem.MolFromSmiles(request.smiles)
+        properties = self._get_properties(mol)
+        return SmilesResponse(image=self._get_image(mol), smiles=request.smiles, properties=MolProperties(**properties))
+
     def _get_properties(self, mol:Chem.Mol) -> dict:
         """
         Returns a dictionary of properties for the molecule.
@@ -23,18 +37,18 @@ class RDKitOperation(BusinessOperation):
 
         properties = {}
 
-        properties["IUPAC name"] = self._calculate_iupac_name(mol)
-        properties["Formula"] = self._calculate_mol_formula(mol)
-        properties["MW"] = self._calculate_mol_weight(mol)
-        properties["SMILES"] = self._calculate_smiles(mol)
-        properties["ClogP"] = self._calculate_clogp(mol)
-        properties["ClogD"] = self._calculate_clogd(mol)
-        properties["TPSA"] = self._calculate_tpsa(mol)
-        properties["pKa"] = self._calculate_pka(mol)
-        properties["H donor"] = self._calculate_num_h_donor(mol)
-        properties["H acceptor"] = self._calculate_num_h_acceptor(mol)
-        properties["Heavy atom count"] = self._calculate_heavy_atom_count(mol)
-        properties["Rotatable bonds"] = self._calculate_num_rotatable_bonds(mol)
+        properties['iupac_name'] = self._calculate_iupac_name(mol)
+        properties['formula'] = self._calculate_mol_formula(mol)
+        properties['mw'] = self._calculate_mol_weight(mol)
+        properties['smiles'] = self._calculate_smiles(mol)
+        properties['clogp'] = self._calculate_clogp(mol)
+        properties['clogd'] = self._calculate_clogd(mol)
+        properties['tpsa'] = self._calculate_tpsa(mol)
+        properties['pka'],properties['pka_type'] = self._calculate_pka(mol)
+        properties['h_donor'] = self._calculate_num_h_donor(mol)
+        properties['h_acceptor'] = self._calculate_num_h_acceptor(mol)
+        properties['heavy_atom_count'] = self._calculate_heavy_atom_count(mol)
+        properties['rotatable_bonds'] = self._calculate_num_rotatable_bonds(mol)
 
         return properties
 
@@ -92,16 +106,16 @@ class RDKitOperation(BusinessOperation):
         """
         return Descriptors.TPSA(mol)
 
-    def _calculate_pka(self, mol:Chem.Mol) -> dict:
+    def _calculate_pka(self, mol:Chem.Mol) -> tuple:
         """
         Returns a list of pKa values for the molecule.
 
         :param mol: The molecule to calculate pKa values for.
         :return: A list of pKa values for the molecule.
         """
-        pka_predictor = PkaPredictor()
-        pka = pka_predictor.predict([mol])
-        return pka[0]
+        msg = PkaRequest(smiles=Chem.MolToSmiles(mol,isomericSmiles=True))
+        rsp = self.send_request_sync('pka', msg)
+        return rsp.pka, rsp.pka_type
 
     def _calculate_num_h_donor(self, mol:Chem.Mol) -> int:
         """
@@ -153,11 +167,12 @@ class RDKitOperation(BusinessOperation):
         except:
             return None
 
-    def _calculate_iupac_name(self,smiles):
+    def _calculate_iupac_name(self,mol):
         # This code uses the CACTUS web service to convert a SMILES string
         # to an IUPAC name. It returns the name as a string.
         CACTUS = "https://cactus.nci.nih.gov/chemical/structure/{0}/{1}"
         rep = "iupac_name"
+        smiles = Chem.MolToSmiles(mol,isomericSmiles=True)
         url = CACTUS.format(smiles, rep)
         response = requests.get(url,timeout=10)
         rsp = None
