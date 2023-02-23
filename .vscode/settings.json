@@ -15,7 +15,7 @@
       "active": true,
       "links": {
         "Production": "http://localhost:${port}/csp/irisapp/EnsPortal.ProductionConfig.zen?PRODUCTION=dc.Demo.Production"
-}
+      }
     },
     "sqltools.connections": [
       {
@@ -31,6 +31,11 @@
         "username": "_SYSTEM",
         "password": "SYS"
       }
-    ]
+    ],
+    "python.testing.pytestArgs": [
+      "src/python"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 
 }

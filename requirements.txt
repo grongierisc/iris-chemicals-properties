@@ -1,2 +1,15 @@
-dataclasses-json==0.5.7
-requests==2.27.1
+certifi==2022.12.7
+charset-normalizer==3.0.1
+dacite==1.8.0
+idna==3.4
+iris @ https://github.com/grongierisc/iris-embedded-python-wrapper/releases/download/v0.0.3/iris-0.0.3-py3-none-any.whl
+iris-pex-embedded-python==2.0.1
+numpy==1.24.2
+pandas==1.5.3
+Pillow==9.4.0
+python-dateutil==2.8.2
+pytz==2022.7.1
+rdkit==2022.9.4
+requests==2.28.2
+six==1.16.0
+urllib3==1.26.14

@@ -8,7 +8,6 @@
  set ^EnsPortal.Settings("SuperUser","LastProduction")	= "dc.Demo.Production"
  
  zn "%SYS"
- Do ##class(Security.Users).UnExpireUserPasswords("*")
 
  do ##class(Security.Services).Get("%Service_CallIn",.prop)
  set prop("Enabled")=1

@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     restart: always
     command: --check-caps false
+    environment:
+      - ISC_CPF_MERGE_FILE=/irisdev/app/merge.conf
     ports: 
       - 1972
       - 53795:52773
