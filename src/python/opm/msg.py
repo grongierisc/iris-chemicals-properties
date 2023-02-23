@@ -20,3 +20,23 @@ class PkaRequest(Message):
 class PkaResponse(Message):
     pka:float = None
     pka_type:str = None
+
+@dataclass
+class GenerateSdfRequest(Message):
+    smiles:str = None
+    filename:str = None
+
+@dataclass
+class GenerateSdfResponse(Message):
+    filename:str = None
+
+@dataclass
+class CompareRequest(Message):
+    smiles:str = None
+    filename:str = None
+
+@dataclass
+class CompareResponse(Message):
+    prop_smiles:MolProperties = None
+    prop_sdf:MolProperties = None
+    diff_prop:MolProperties = None

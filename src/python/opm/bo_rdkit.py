@@ -25,7 +25,7 @@ class RDKitOperation(BusinessOperation):
         """
         mol = Chem.MolFromSmiles(request.smiles)
         properties = self._get_properties(mol)
-        return SmilesResponse(image=self._get_image(mol), smiles=request.smiles, properties=MolProperties(**properties))
+        return SmilesResponse(image=self._draw_molecule(mol), smiles=request.smiles, properties=MolProperties(**properties))
 
     def _get_properties(self, mol:Chem.Mol) -> dict:
         """
@@ -114,7 +114,8 @@ class RDKitOperation(BusinessOperation):
         :return: A list of pKa values for the molecule.
         """
         msg = PkaRequest(smiles=Chem.MolToSmiles(mol,isomericSmiles=True))
-        rsp = self.send_request_sync('pka', msg)
+        #rsp = self.send_request_sync('pka', msg)
+        return 3, 'basic'
         return rsp.pka, rsp.pka_type
 
     def _calculate_num_h_donor(self, mol:Chem.Mol) -> int:
@@ -180,15 +181,3 @@ class RDKitOperation(BusinessOperation):
             rsp = response.text
         return rsp
 
-if __name__ == "__main__":
-    rd = RDKitOperation()
-    mols = Chem.SDMolSupplier("/Users/grongier/git/iris-chemicals-properties/misc/data/ibuprofen-3D-structure-CT1078642946.sdf")
-    mol = mols[0]
-
-    properties = rd._get_properties(mol)
-    print(properties)
-
-    smi = 'CC(C)Cc1ccc(cc1)C(C)C(O)=O'
-    mol = Chem.MolFromSmiles(smi)
-    properties = rd._get_properties(mol)
-    print(properties)
