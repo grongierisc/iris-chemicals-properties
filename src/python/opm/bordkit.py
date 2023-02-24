@@ -24,10 +24,10 @@ class RDKitOperation(BusinessOperation):
         :return: A dictionary of properties for the molecule.
         """
         mol = Chem.MolFromSmiles(request.smiles)
-        properties = self._get_properties(mol)
+        properties = self._get_properties_from_mol(mol)
         return SmilesResponse(image=self._draw_molecule(mol), smiles=request.smiles, properties=MolProperties(**properties))
 
-    def _get_properties(self, mol:Chem.Mol) -> dict:
+    def _get_properties_from_mol(self, mol:Chem.Mol) -> dict:
         """
         Returns a dictionary of properties for the molecule.
 
@@ -114,8 +114,9 @@ class RDKitOperation(BusinessOperation):
         :return: A list of pKa values for the molecule.
         """
         msg = PkaRequest(smiles=Chem.MolToSmiles(mol,isomericSmiles=True))
-        #rsp = self.send_request_sync('pka', msg)
-        return 3, 'basic'
+        
+        rsp = self.send_request_sync('Python.bopka.PkaPredictorOperation', msg)
+        #return 3, 'basic'
         return rsp.pka, rsp.pka_type
 
     def _calculate_num_h_donor(self, mol:Chem.Mol) -> int:

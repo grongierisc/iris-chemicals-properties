@@ -2,7 +2,7 @@ from rdkit import Chem
 
 from grongier.pex import BusinessProcess
 
-from msg import *
+from msg import GenerateSdfRequest, GenerateSdfResponse, SmilesRequest, SmilesResponse, CompareRequest, CompareResponse
 
 class GenerateSdFileProcess(BusinessProcess):
     """
@@ -12,10 +12,10 @@ class GenerateSdFileProcess(BusinessProcess):
         """
 
         """
-        #rsp = self.send_request_sync("rdkit", request=request)
-        from bo_rdkit import RDKitOperation
-        bo = RDKitOperation()
-        rsp = bo.get_properties_from_smiles(SmilesRequest(smiles=request.smiles))
+        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", request=request)
+        # from bo_rdkit import RDKitOperation
+        # bo = RDKitOperation()
+        # rsp = bo.get_properties_from_smiles(SmilesRequest(smiles=request.smiles))
         
         # create an sdf from the proprties
         mol = Chem.MolFromSmiles(rsp.smiles)
@@ -46,14 +46,14 @@ class SmilesProcess(BusinessProcess):
     """
 
     """
-    def on_message(self, request:SmilesRequest) -> SmilesResponse:
+    def get_smiles(self, request:SmilesRequest) -> SmilesResponse:
         """
 
         """
-        #rsp = self.send_request_sync("rdkit", request=request)
-        from bo_rdkit import RDKitOperation
-        bo = RDKitOperation()
-        rsp = bo.get_properties_from_smiles(SmilesRequest(smiles=request.smiles))
+        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", request=request)
+        # from bo_rdkit import RDKitOperation
+        # bo = RDKitOperation()
+        # rsp = bo.get_properties_from_smiles(SmilesRequest(smiles=request.smiles))
 
         return rsp
 

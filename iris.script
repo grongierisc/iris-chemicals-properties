@@ -5,7 +5,7 @@
  zpm "install pex-embbeded-python" 
  do $System.OBJ.LoadDir("/irisdev/app/src","ck",,1)
 
- set ^EnsPortal.Settings("SuperUser","LastProduction")	= "dc.Demo.Production"
+ set ^EnsPortal.Settings("SuperUser","LastProduction")	= "Opm.Production"
  
  zn "%SYS"
 

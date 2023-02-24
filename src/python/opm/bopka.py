@@ -1,6 +1,6 @@
 from grongier.pex import BusinessOperation
 
-from .pka.predictor import PkaPredictor
+from pka.predictor import PkaPredictor
 
 from rdkit import Chem
 
@@ -17,7 +17,7 @@ class PkaPredictorOperation(BusinessOperation):
         """
         mol = Chem.MolFromSmiles(request.smiles)
         pka_dict = self._calculate_pka(mol)
-        pka = list(pka_dict.values())[0]
+        pka = float(list(pka_dict.values())[0])
         pka_type = list(pka_dict.keys())[0]
         return PkaResponse(pka=pka, pka_type=pka_type)
 

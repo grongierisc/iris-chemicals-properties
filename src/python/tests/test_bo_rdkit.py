@@ -1,7 +1,7 @@
 import pytest
 from rdkit import Chem
 
-import opm.bo_rdkit as bo_rdkit
+import opm.bordkit as bo_rdkit
 import opm.msg as msg
 
 class TestBoRdkit:
