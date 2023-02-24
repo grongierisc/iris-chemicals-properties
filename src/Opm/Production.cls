@@ -3,7 +3,7 @@ Class Opm.Production Extends Ens.Production
 
 XData ProductionDefinition
 {
-<Production Name="Opm.Production" LogGeneralTraceEvents="false">
+<Production Name="Opm.Production" TestingEnabled="true" LogGeneralTraceEvents="true">
   <Description></Description>
   <ActorPoolSize>2</ActorPoolSize>
   <Item Name="Python.bp.CompareProcess" Category="" ClassName="Python.bp.CompareProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
