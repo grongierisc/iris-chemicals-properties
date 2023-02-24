@@ -16,6 +16,8 @@ XData ProductionDefinition
   </Item>
   <Item Name="Python.bordkit.RDKitOperation" Category="" ClassName="Python.bordkit.RDKitOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
+  <Item Name="Python.bosdf.SdfOperation" Category="" ClassName="Python.bosdf.SdfOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
 </Production>
 }
 

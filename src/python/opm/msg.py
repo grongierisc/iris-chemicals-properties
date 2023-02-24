@@ -40,3 +40,26 @@ class CompareResponse(Message):
     prop_smiles:MolProperties = None
     prop_sdf:MolProperties = None
     diff_prop:MolProperties = None
+
+@dataclass
+class SdfExtractorRequest(Message):
+    filename:str = None
+
+@dataclass
+class SdfExtractorResponse(Message):
+    properties:MolProperties = None
+
+@dataclass
+class CreateSdfRequest(Message):
+    properties:MolProperties = None
+    filename:str = None
+
+@dataclass
+class CreateSdfResponse(Message):
+    filename:str = None
+
+@dataclass
+class CreateImageRequest(Message):
+    smiles:str = None
+    filename:str = None
+

@@ -2,7 +2,11 @@ from rdkit import Chem
 
 from grongier.pex import BusinessProcess
 
-from msg import GenerateSdfRequest, GenerateSdfResponse, SmilesRequest, SmilesResponse, CompareRequest, CompareResponse
+from msg import (GenerateSdfRequest, GenerateSdfResponse, 
+                SmilesRequest, SmilesResponse, 
+                CompareRequest, CompareResponse,
+                SdfExtractorRequest, SdfExtractorResponse,
+                CreateSdfRequest, CreateSdfResponse)
 
 class GenerateSdFileProcess(BusinessProcess):
     """
@@ -12,48 +16,23 @@ class GenerateSdFileProcess(BusinessProcess):
         """
 
         """
-        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", request=request)
-        # from bo_rdkit import RDKitOperation
-        # bo = RDKitOperation()
-        # rsp = bo.get_properties_from_smiles(SmilesRequest(smiles=request.smiles))
-        
-        # create an sdf from the proprties
-        mol = Chem.MolFromSmiles(rsp.smiles)
-        mol.SetProp("IUPAC_NAME", rsp.properties.iupac_name)
-        mol.SetProp("FORMULA", rsp.properties.formula)
-        mol.SetProp("MW", str(rsp.properties.mw))
-        mol.SetProp("SMILES", rsp.properties.smiles)
-        mol.SetProp("CLOGP", str(rsp.properties.clogp))
-        mol.SetProp("CLOGD", str(rsp.properties.clogd))
-        mol.SetProp("TPSA", str(rsp.properties.tpsa))
-        mol.SetProp("PKA", str(rsp.properties.pka))
-        mol.SetProp("PKA_TYPE", str(rsp.properties.pka_type))
-        mol.SetProp("H_DONOR", str(rsp.properties.h_donor))
-        mol.SetProp("H_ACCEPTOR", str(rsp.properties.h_acceptor))
-        mol.SetProp("HEAVY_ATOM_COUNT", str(rsp.properties.heavy_atom_count))
-        mol.SetProp("ROTATABLE_BONDS", str(rsp.properties.rotatable_bonds))
-        mol.SetProp("IMAGE", str(rsp.image))
+        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", SmilesRequest(smiles=request.smiles))
 
-        w = Chem.SDWriter(request.filename)
-        w.write(mol)
-        w.close()
+        create_sdfile = self.send_request_sync("Python.bosdf.SdfOperation", CreateSdfRequest(properties=rsp.properties, filename=request.filename))
         
         return GenerateSdfResponse(
-            filename=request.filename
+            filename=create_sdfile.filename
         )
 
 class SmilesProcess(BusinessProcess):
     """
 
     """
-    def get_smiles(self, request:SmilesRequest) -> SmilesResponse:
+    def on_message(self, request:SmilesRequest) -> SmilesResponse:
         """
 
         """
-        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", request=request)
-        # from bo_rdkit import RDKitOperation
-        # bo = RDKitOperation()
-        # rsp = bo.get_properties_from_smiles(SmilesRequest(smiles=request.smiles))
+        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", request)
 
         return rsp
 
@@ -96,12 +75,9 @@ class CompareProcess(BusinessProcess):
         """
         Extract the properties from the smiles
         """
-        # create the process
-        process = SmilesProcess()
-        # start the process
         msg = SmilesRequest(smiles=smiles)
-        rsp = process.on_message(msg)
-        # get the properties
+        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", msg)
+
         properties = rsp.properties.__dict__
         # change all the properties name in lower case
         properties = {k.lower(): v for k, v in properties.items()}
@@ -112,14 +88,10 @@ class CompareProcess(BusinessProcess):
         """
         Extract the properties from the sdf file
         """
-        mols = Chem.SDMolSupplier(filename)
-        mol = mols[0]
-        # get all the properties as a dictionary
-        properties = mol.GetPropsAsDict()
-        # change all the properties name in lower case
-        properties = {k.lower(): v for k, v in properties.items()}
+        msg = SdfExtractorRequest(filename=filename)
+        rsp = self.send_request_sync("Python.bosdf.SdfOperation", msg)
 
-        return properties
+        return rsp.properties.__dict__
 
 if __name__ == "__main__":
     # create the process
