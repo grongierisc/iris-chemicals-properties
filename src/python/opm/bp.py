@@ -6,11 +6,12 @@ from msg import (GenerateSdfRequest, GenerateSdfResponse,
                 SmilesRequest, SmilesResponse, 
                 CompareRequest, CompareResponse,
                 SdfExtractorRequest, SdfExtractorResponse,
-                CreateSdfRequest, CreateSdfResponse)
+                CreateSdfRequest, CreateSdfResponse,
+                PkaRequest,CreateImageRequest)
 
 class GenerateSdFileProcess(BusinessProcess):
     """
-
+    Generate the sdf file
     """
     def on_message(self, request:GenerateSdfRequest) -> GenerateSdfResponse:
         """
@@ -26,13 +27,27 @@ class GenerateSdFileProcess(BusinessProcess):
 
 class SmilesProcess(BusinessProcess):
     """
-
+    Main process to get the properties from the smiles
     """
     def on_message(self, request:SmilesRequest) -> SmilesResponse:
         """
-
+        Main function to get the properties from the smiles
         """
-        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", request)
+        rsp = SmilesResponse()
+        rsp.smiles = request.smiles
+
+        rsp_rdkit = self.send_request_sync("Python.bordkit.RDKitOperation", SmilesRequest(smiles=request.smiles))
+        rsp.properties = rsp_rdkit.properties
+
+        rsp_iupa = self.send_request_sync("Python.bomisc.IUPACOperation", SmilesRequest(smiles=request.smiles))
+        rsp.properties.iupac_name = rsp_iupa.properties.iupac_name
+
+        pka_rsp = self.send_request_sync("Python.bopka.PkaPredictorOperation", PkaRequest(smiles=request.smiles))
+
+        rsp.properties.pka = pka_rsp.pka
+        rsp.properties.pka_type = pka_rsp.pka_type
+
+        self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=request.smiles, filename="image.png"))
 
         return rsp
 
@@ -76,7 +91,7 @@ class CompareProcess(BusinessProcess):
         Extract the properties from the smiles
         """
         msg = SmilesRequest(smiles=smiles)
-        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", msg)
+        rsp = self.send_request_sync("Python.bp.SmilesProcess", msg)
 
         properties = rsp.properties.__dict__
         # change all the properties name in lower case
