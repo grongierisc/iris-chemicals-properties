@@ -47,7 +47,7 @@ class SmilesProcess(BusinessProcess):
         rsp.properties.pka = pka_rsp.pka
         rsp.properties.pka_type = pka_rsp.pka_type
 
-        self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=request.smiles, filename="image.png"))
+        self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=request.smiles, filename=None))
 
         return rsp
 
@@ -65,6 +65,9 @@ class CompareProcess(BusinessProcess):
         prop_smiles = self.extract_smiles_properties(request.smiles)
         # diff the properties
         diff_prop = self.diff_properties(prop_smiles, prop_sdf)
+        # diff the images
+        self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=request.smiles, filename=request.filename))
+
 
         return CompareResponse(
             prop_smiles=prop_smiles,
@@ -94,8 +97,6 @@ class CompareProcess(BusinessProcess):
         rsp = self.send_request_sync("Python.bp.SmilesProcess", msg)
 
         properties = rsp.properties.__dict__
-        # change all the properties name in lower case
-        properties = {k.lower(): v for k, v in properties.items()}
 
         return properties
 
@@ -107,16 +108,3 @@ class CompareProcess(BusinessProcess):
         rsp = self.send_request_sync("Python.bosdf.SdfOperation", msg)
 
         return rsp.properties.__dict__
-
-if __name__ == "__main__":
-    # create the process
-    process = CompareProcess()
-    # start the process
-    filename = '/Users/grongier/git/iris-chemicals-properties/misc/test.sdf'
-    msg = CompareRequest(filename=filename, smiles="CC(=O)Nc1ccc(cc1)C(=O)O")
-    rsp = process.on_message(msg)
-    # print the result
-    print(rsp)
-    # process = GenerateSdFileProcess()
-    # msg = GenerateSdfRequest(smiles="CC(=O)Nc1ccc(cc1)C(=O)O", filename="/Users/grongier/git/iris-chemicals-properties/misc/test.sdf")
-    # process.on_message(msg)

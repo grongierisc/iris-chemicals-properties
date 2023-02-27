@@ -1,6 +1,6 @@
 from grongier.pex import BusinessOperation
 
-from msg import SdfExtractorRequest, SdfExtractorResponse, CreateSdfRequest, CreateSdfResponse
+from msg import SdfExtractorRequest, SdfExtractorResponse, CreateSdfRequest, CreateSdfResponse, CreateImageRequest
 
 from rdkit import Chem
 
@@ -12,6 +12,9 @@ class SdfOperation(BusinessOperation):
         """
         # get the properties from the sdf file
         prop_sdf = self.extract_sdf_properties(request.filename)
+
+        #get the drawing from the sdf file
+        self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=None, filename=request.filename))
 
         return SdfExtractorResponse(prop_sdf)
 

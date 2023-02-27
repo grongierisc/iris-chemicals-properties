@@ -55,14 +55,21 @@ class GenerateImageOperation(BusinessOperation):
         :param mol: The molecule to process.
         :return: An image of the molecule.
         """
-        mol = Chem.MolFromSmiles(request.smiles)
-        resp = iris.cls('Opm.ImageDisplay')._New()
+        image = None
+        if request.filename is not None and request.smiles is not None:
+            image = self._draw_molecule_diff(request.smiles,request.filename)
+        elif request.smiles is not None:
+            image = self._draw_molecule_smiles(request.smiles)
+        elif request.filename is not None:
+            image = self._draw_molecule_sdf(request.filename)
+        else:
+            return None
 
-        image= self._draw_molecule(mol)
+        resp = iris.cls('Opm.ImageDisplay')._New()
+       
         # Converting the image into a binary format and then writing it into the 
         # BinaryImage field of the response.
         output = BytesIO()
-        image.save(request.filename, format="png")
         image.save(output, format="png")
         binary = output.getvalue()
         buffer = 3600
@@ -72,12 +79,38 @@ class GenerateImageOperation(BusinessOperation):
 
         return resp
 
-    def _draw_molecule(self,mol):
+    def _draw_molecule_diff(self,smiles,filename):
         """
-        _draw_molecule takes a molecule and returns the image of the molecule in bytes.
-        mol: molecule to be drawn
+        _draw_molecule_diff takes a smiles string and sdf file and returns the image of the difference between the two molecules in bytes.
+        smiles: smiles string of the molecule to be drawn
+        filename: sdf file of the molecule to be drawn
         size: size of the image to be drawn
         """
+        mol_smiles = Chem.MolFromSmiles(smiles)
+        mols = Chem.SDMolSupplier(filename)
+        mol_sdf = mols[0]
+        # Highlight the differences between the two molecules
+        mol_sdf = Chem.MolFromSmiles(Chem.MolToSmiles(mol_sdf,isomericSmiles=True))
+        mol_smiles = Chem.MolFromSmiles(Chem.MolToSmiles(mol_smiles,isomericSmiles=True))
+        return Draw.MolsToGridImage([mol_smiles,mol_sdf],legends=['Smiles','SDF'],highlightAtomLists=[mol_smiles.GetSubstructMatch(mol_sdf),mol_sdf.GetSubstructMatch(mol_smiles)])
+
+    def _draw_molecule_smiles(self,smiles):
+        """
+        _draw_molecule_smiles takes a smiles string and returns the image of the molecule in bytes.
+        smiles: smiles string of the molecule to be drawn
+        size: size of the image to be drawn
+        """
+        mol = Chem.MolFromSmiles(smiles)
+        return Draw.MolToImage(mol)
+
+    def _draw_molecule_sdf(self,filename):
+        """
+        _draw_molecule_sdf takes a sdf file and returns the image of the molecule in bytes.
+        filename: sdf file of the molecule to be drawn
+        size: size of the image to be drawn
+        """
+        mols = Chem.SDMolSupplier(filename)
+        mol = mols[0]
         return Draw.MolToImage(mol)
 
 
