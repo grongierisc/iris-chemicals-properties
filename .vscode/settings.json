@@ -10,11 +10,12 @@
       "password": "SYS",
       "docker-compose": {
         "service": "iris",
-        "internalPort": 52773
+        "internalPort": 52773,
+        "file": "docker-compose.yml"
       },
       "active": true,
       "links": {
-        "Production": "http://localhost:${port}/csp/irisapp/EnsPortal.ProductionConfig.zen?PRODUCTION=dc.Demo.Production"
+        "Production": "http://localhost:${port}/csp/irisapp/EnsPortal.ProductionConfig.zen?PRODUCTION=Opm.Production"
       }
     },
     "sqltools.connections": [
