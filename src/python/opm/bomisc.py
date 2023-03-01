@@ -38,10 +38,13 @@ class IUPACOperation(BusinessOperation):
         try:
             response = requests.get(url,timeout=10)
         except requests.exceptions.Timeout:
+            self.log_warning("Timeout occurred")
             return None
         rsp = None
         if (response.status_code == 200):
             rsp = response.text
+        else:
+            self.log_warning("Error occurred with status code: " + str(response.status_code))
         return rsp
 
 class GenerateImageOperation(BusinessOperation):
