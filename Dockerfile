@@ -1,5 +1,5 @@
 ARG IMAGE=intersystemsdc/iris-community:latest
-FROM $IMAGE
+FROM $IMAGE as builder
 
 # use the root user to install packages
 USER root   
@@ -27,5 +27,14 @@ RUN iris start IRIS \
     && /usr/irissys/bin/irispython src/python/register.py \
     && iris stop IRIS quietly
 
+FROM $IMAGE as final
 
+WORKDIR /irisdev/app
+COPY . .
+
+ADD --chown=${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} https://github.com/grongierisc/iris-docker-multi-stage-script/releases/latest/download/copy-data.py /irisdev/app/copy-data.py
+
+RUN --mount=type=bind,source=/,target=/builder/root,from=builder \
+    cp -f /builder/root/usr/irissys/iris.cpf /usr/irissys/iris.cpf && \
+    python3 /irisdev/app/copy-data.py -c /usr/irissys/iris.cpf -d /builder/root/ -p
 
