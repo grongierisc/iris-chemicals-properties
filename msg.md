@@ -6,12 +6,17 @@ msg.SmilesRequest
 msg.GenerateSdfRequest
 {
 "smiles":"CC(=O)Nc1ccc(cc1)C(=O)O",
-"filename":"/irisdev/app/misc/test.sdf"
+"filename":"/irisdev/app/misc/test4.sdf"
+}
+
+msg.SdfExtractorRequest
+{
+"filename":"/irisdev/app/misc/test4.sdf"
 }
 
 msg.CompareRequest
 {
-"smiles":"CC(=O)Nc1ccc(cc1)C(=O)O",
+"smiles":"C(=O)O",
 "filename":"/irisdev/app/misc/test.sdf"
 }
 
