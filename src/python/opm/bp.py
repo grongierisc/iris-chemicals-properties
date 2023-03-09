@@ -7,9 +7,10 @@ from msg import (GenerateSdfRequest, GenerateSdfResponse,
                 CompareRequest, CompareResponse,
                 SdfExtractorRequest, SdfExtractorResponse,
                 CreateSdfRequest, CreateSdfResponse,
-                PkaRequest,CreateImageRequest)
+                PkaRequest,CreateImageRequest,
+                CreatePersistenceRequest)
 
-class GenerateSdFileProcess(BusinessProcess):
+class SdfProcess(BusinessProcess):
     """
     Generate the sdf file
     """
@@ -17,13 +18,24 @@ class GenerateSdFileProcess(BusinessProcess):
         """
 
         """
-        rsp = self.send_request_sync("Python.bordkit.RDKitOperation", SmilesRequest(smiles=request.smiles))
+        rsp = self.send_request_sync("Python.bp.SmilesProcess", SmilesRequest(smiles=request.smiles))
 
         create_sdfile = self.send_request_sync("Python.bosdf.SdfOperation", CreateSdfRequest(properties=rsp.properties, filename=request.filename))
         
         return GenerateSdfResponse(
             filename=create_sdfile.filename
         )
+    
+    def extract_sdf_properties(self, msg:SdfExtractorRequest) -> SdfExtractorResponse:
+        """
+        Extract the properties from the sdf file
+        """
+        sdf_extractor = self.send_request_sync("Python.bosdf.SdfOperation", msg)
+
+        # persist the molecule
+        self.send_request_sync("Python.bopersist.Persist", CreatePersistenceRequest(filename=msg.filename, properties=sdf_extractor.properties))
+
+        return sdf_extractor
 
 class SmilesProcess(BusinessProcess):
     """
@@ -48,6 +60,9 @@ class SmilesProcess(BusinessProcess):
         rsp.properties.pka_type = pka_rsp.pka_type
 
         self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=request.smiles, filename=None))
+
+        #persist the molecule
+        self.send_request_sync("Python.bopersist.Persist", CreatePersistenceRequest(smiles=request.smiles, properties=rsp.properties))
 
         return rsp
 
@@ -105,6 +120,6 @@ class CompareProcess(BusinessProcess):
         Extract the properties from the sdf file
         """
         msg = SdfExtractorRequest(filename=filename)
-        rsp = self.send_request_sync("Python.bosdf.SdfOperation", msg)
+        rsp = self.send_request_sync("Python.bp.SdfProcess", msg)
 
         return rsp.properties.__dict__

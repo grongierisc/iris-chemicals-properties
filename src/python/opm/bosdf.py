@@ -16,7 +16,7 @@ class SdfOperation(BusinessOperation):
         #get the drawing from the sdf file
         self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=None, filename=request.filename))
 
-        return SdfExtractorResponse(prop_sdf)
+        return SdfExtractorResponse(properties=prop_sdf)
 
     def extract_sdf_properties(self, filename):
         """
@@ -38,19 +38,10 @@ class SdfOperation(BusinessOperation):
         """
         # create an sdf from the proprties
         mol = Chem.MolFromSmiles(request.properties.smiles)
-        mol.SetProp("IUPAC_NAME", request.properties.iupac_name)
-        mol.SetProp("FORMULA", request.properties.formula)
-        mol.SetProp("MW", str(request.properties.mw))
-        mol.SetProp("SMILES", request.properties.smiles)
-        mol.SetProp("CLOGP", str(request.properties.clogp))
-        mol.SetProp("CLOGD", str(request.properties.clogd))
-        mol.SetProp("TPSA", str(request.properties.tpsa))
-        mol.SetProp("PKA", str(request.properties.pka))
-        mol.SetProp("PKA_TYPE", str(request.properties.pka_type))
-        mol.SetProp("H_DONOR", str(request.properties.h_donor))
-        mol.SetProp("H_ACCEPTOR", str(request.properties.h_acceptor))
-        mol.SetProp("HEAVY_ATOM_COUNT", str(request.properties.heavy_atom_count))
-        mol.SetProp("ROTATABLE_BONDS", str(request.properties.rotatable_bonds))
+        # for each property not null, add it to the mol as str
+        for k, v in request.properties.__dict__.items():
+            if v:
+                mol.SetProp(k.upper(), str(v))
 
         w = Chem.SDWriter(request.filename)
         w.write(mol)

@@ -8,7 +8,7 @@ XData ProductionDefinition
   <ActorPoolSize>2</ActorPoolSize>
   <Item Name="Python.bp.CompareProcess" Category="" ClassName="Python.bp.CompareProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
-  <Item Name="Python.bp.GenerateSdFileProcess" Category="" ClassName="Python.bp.GenerateSdFileProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  <Item Name="Python.bp.SdfProcess" Category="" ClassName="Python.bp.SdfProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
   <Item Name="Python.bp.SmilesProcess" Category="" ClassName="Python.bp.SmilesProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
@@ -21,6 +21,8 @@ XData ProductionDefinition
   <Item Name="Python.bomisc.IUPACOperation" Category="" ClassName="Python.bomisc.IUPACOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
   <Item Name="Python.bomisc.GenerateImageOperation" Category="" ClassName="Python.bomisc.GenerateImageOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Python.bopersist.Persist" Category="" ClassName="Python.bopersist.Persist" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
 </Production>
 }

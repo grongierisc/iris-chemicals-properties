@@ -4,3 +4,5 @@ __pycache__
 .pytest_cache
 
 iris-main.log
+
+.ipynb_checkpoints

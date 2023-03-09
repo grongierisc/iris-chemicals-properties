@@ -63,3 +63,8 @@ class CreateImageRequest(Message):
     smiles:str = None
     filename:str = None
 
+@dataclass
+class CreatePersistenceRequest(Message):
+    filename:str = None
+    smiles:str = None
+    properties:MolProperties = None
