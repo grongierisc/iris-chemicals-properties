@@ -29,7 +29,9 @@ class Persist(BusinessOperation):
         del dict['properties']
 
         df = pd.DataFrame([dict])
-        db = create_engine('iris+emb:///')
+        db = create_engine('iris+emb:///',execution_options={
+            "isolation_level": "AUTOCOMMIT",
+        })
 
         df.to_sql('Mol', db, if_exists='append', dtype= {
             'smiles': types.VARCHAR(length=255),
