@@ -31,7 +31,7 @@ class Persist(BusinessOperation):
         df = pd.DataFrame([dict])
         db = create_engine('iris+emb:///')
 
-        df.to_sql('Mol', db, if_exists='append', index=True, dtype= {
+        df.to_sql('Mol', db, if_exists='append', dtype= {
             'smiles': types.VARCHAR(length=255),
             'filename': types.VARCHAR(length=255),
             'formula': types.VARCHAR(length=255),
