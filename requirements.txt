@@ -6,8 +6,7 @@ exceptiongroup==1.1.0
 greenlet==2.0.2
 idna==3.4
 iniconfig==2.0.0
-iris @ https://github.com/grongierisc/iris-embedded-python-wrapper/releases/download/v0.0.3/iris-0.0.3-py3-none-any.whl
-iris-pex-embedded-python==2.0.1
+iris-pex-embedded-python
 joblib==1.2.0
 numpy==1.24.2
 packaging==23.0
