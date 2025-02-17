@@ -4,6 +4,7 @@ from bopka import PkaPredictorOperation
 from bordkit import RDKitOperation
 from bosdf import SdfOperation
 from bopersist import Persist
+from bs import Rest
 
 CLASSES = {
     'Python.bomisc.IUPACOperation': IUPACOperation,
@@ -14,7 +15,8 @@ CLASSES = {
     'Python.bopka.PkaPredictorOperation': PkaPredictorOperation,
     'Python.bordkit.RDKitOperation': RDKitOperation,
     'Python.bosdf.SdfOperation': SdfOperation,
-    'Python.bopersist.Persist': Persist
+    'Python.bopersist.Persist': Persist,
+    'Python.bs.Rest': Rest
 }
 
 PRODUCTIONS = [

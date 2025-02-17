@@ -22,10 +22,6 @@ Method %GetContentType() As %String
 Method %ShowContents(pZenOutput As %Boolean = 0)
 {
 	set MaxStringLength = 3640044
-	if ..Base64Image.Size > 0 {
-		&html<<div>Base64Image<div>>
-		&html<<img src="data:image/jpeg;base64,#(..Base64Image.Read(MaxStringLength))#" width="100%">>
-	}
 	if ..BinaryImage.Size >0 {
 		&html<<div>BinaryImage<div>>
 		&html<<img src="%25CSP.StreamServer.cls?STREAMOID=#(..Encrypt(..BinaryImage.%Oid()))#" width="100%">>

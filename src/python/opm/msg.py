@@ -36,6 +36,28 @@ class CompareRequest(Message):
     filename:str = None
 
 @dataclass
+class Compare2SmilesRequest(Message):
+    smiles_a:str = None
+    smiles_b:str = None
+
+@dataclass
+class Compare2SmilesResponse(Message):
+    prop_a:MolProperties = None
+    prop_b:MolProperties = None
+    diff_prop:MolProperties = None
+
+@dataclass
+class Compare2SdfRequest(Message):
+    filename_a:str = None
+    filename_b:str = None
+
+@dataclass
+class Compare2SdfResponse(Message):
+    prop_a:MolProperties = None
+    prop_b:MolProperties = None
+    diff_prop:MolProperties = None
+
+@dataclass
 class CompareResponse(Message):
     prop_smiles:MolProperties = None
     prop_sdf:MolProperties = None
@@ -62,6 +84,16 @@ class CreateSdfResponse(Message):
 class CreateImageRequest(Message):
     smiles:str = None
     filename:str = None
+
+@dataclass
+class CreateImage2SmilesRequest(Message):
+    smiles_a:str = None
+    smiles_b:str = None
+
+@dataclass
+class CreateImage2SdfRequest(Message):
+    filename_a:str = None
+    filename_b:str = None
 
 @dataclass
 class CreatePersistenceRequest(Message):

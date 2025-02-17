@@ -1,0 +1,81 @@
+.compare-smiles-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.input-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-section input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.input-section button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.results-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.properties-row {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.property-section {
+  flex: 1;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+.property-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.property-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.property-label {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.difference-section {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}

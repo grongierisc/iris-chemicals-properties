@@ -1,0 +1,23 @@
+POST http://localhost:50667/smiles/img
+Content-Type: application/json
+Accept: image/png; base64
+
+{
+  "smiles": "C1=CC=CC=C1"
+}
+
+
+### multi part from an sdf file
+POST http://localhost:50667/sdf
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="text"
+
+title
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="test.sdf"
+Content-Type: application/octet-stream
+
+< ./misc/test.sdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

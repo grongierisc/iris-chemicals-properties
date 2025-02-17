@@ -25,3 +25,6 @@ msg.CreateImageRequest
 "smiles":"CC(=O)Nc1ccc(cc1)C(=O)O",
 "filename":"/irisdev/app/misc/test.png"
 }
+
+
+iop --test Python.bp.CompareProcess --classname msg.CompareRequest --body '{ "smiles":"C(=O)O", "filename":"/irisdev/app/misc/test.sdf" }'

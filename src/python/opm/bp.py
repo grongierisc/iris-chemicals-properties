@@ -8,7 +8,9 @@ from msg import (GenerateSdfRequest, GenerateSdfResponse,
                 SdfExtractorRequest, SdfExtractorResponse,
                 CreateSdfRequest, CreateSdfResponse,
                 PkaRequest,CreateImageRequest,
-                CreatePersistenceRequest)
+                CreatePersistenceRequest,
+                Compare2SdfRequest, Compare2SdfResponse,
+                Compare2SmilesRequest, Compare2SmilesResponse)
 
 class SdfProcess(BusinessProcess):
     """
@@ -67,9 +69,35 @@ class SmilesProcess(BusinessProcess):
         return rsp
 
 class CompareProcess(BusinessProcess):
-    """
 
-    """
+    def compare_sdf(self, request:Compare2SdfRequest) -> Compare2SdfResponse:
+        """
+        Compare the properties of two sdf files
+        """
+        prop_a = self.extract_sdf_properties(filename=request.filename_a)
+        prop_b = self.extract_sdf_properties(filename=request.filename_b)
+        diff_prop = self.diff_properties(prop_a, prop_b)
+
+        return Compare2SdfResponse(
+            prop_a=prop_a,
+            prop_b=prop_b,
+            diff_prop=diff_prop
+        )
+    
+    def compare_smiles(self, request:Compare2SmilesRequest) -> Compare2SmilesResponse:
+        """
+        Compare the properties of two smiles
+        """
+        prop_a = self.extract_smiles_properties(request.smiles_a)
+        prop_b = self.extract_smiles_properties(request.smiles_b)
+        diff_prop = self.diff_properties(prop_a, prop_b)
+
+        return Compare2SmilesResponse(
+            prop_a=prop_a,
+            prop_b=prop_b,
+            diff_prop=diff_prop
+        )
+
     def on_message(self, request:CompareRequest) -> CompareResponse:
         """
 
