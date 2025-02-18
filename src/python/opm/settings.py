@@ -29,6 +29,11 @@ PRODUCTIONS = [
         "ActorPoolSize": "2",
         "Item": [
             {
+                "@Name": "Python.bs.Rest",
+                "@Category": "",
+                "@ClassName": "Python.bs.Rest",
+            },
+            {
                 "@Name": "Python.bp.CompareProcess",
                 "@Category": "",
                 "@ClassName": "Python.bp.CompareProcess",

@@ -38,8 +38,8 @@ class IUPACOperation(BusinessOperation):
         # try catch block to handle timeout
         try:
             response = requests.get(url,timeout=10)
-        except requests.exceptions.Timeout:
-            self.log_warning("Timeout occurred")
+        except Exception as e:
+            self.log_warning(str(e))
             return None
         rsp = None
         if (response.status_code == 200):
@@ -177,9 +177,6 @@ class GenerateImageOperation(BusinessOperation):
         mols_b = Chem.SDMolSupplier(filename_b)
         mol_a = mols_a[0]
         mol_b = mols_b[0]
-        # Highlight the differences between the two molecules
-        mol_a = Chem.MolFromSmiles(Chem.MolToSmiles(mol_a,isomericSmiles=True))
-        mol_b = Chem.MolFromSmiles(Chem.MolToSmiles(mol_b,isomericSmiles=True))
         return Draw.MolsToGridImage([mol_a,mol_b],molsPerRow=1,legends=['SDF A','SDF B'],highlightAtomLists=[mol_a.GetSubstructMatch(mol_b),mol_b.GetSubstructMatch(mol_a)])
 
     def _draw_molecule_diff(self,smiles,filename):
@@ -192,9 +189,6 @@ class GenerateImageOperation(BusinessOperation):
         mol_smiles = Chem.MolFromSmiles(smiles)
         mols = Chem.SDMolSupplier(filename)
         mol_sdf = mols[0]
-        # Highlight the differences between the two molecules
-        mol_sdf = Chem.MolFromSmiles(Chem.MolToSmiles(mol_sdf,isomericSmiles=True))
-        mol_smiles = Chem.MolFromSmiles(Chem.MolToSmiles(mol_smiles,isomericSmiles=True))
         return Draw.MolsToGridImage([mol_smiles,mol_sdf],molsPerRow=1,legends=['Smiles','SDF'],highlightAtomLists=[mol_smiles.GetSubstructMatch(mol_sdf),mol_sdf.GetSubstructMatch(mol_smiles)])
 
     def _draw_molecule_smiles(self,smiles):

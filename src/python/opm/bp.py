@@ -8,7 +8,6 @@ from msg import (GenerateSdfRequest, GenerateSdfResponse,
                 SdfExtractorRequest, SdfExtractorResponse,
                 CreateSdfRequest, CreateSdfResponse,
                 PkaRequest,CreateImageRequest,
-                CreatePersistenceRequest,
                 Compare2SdfRequest, Compare2SdfResponse,
                 Compare2SmilesRequest, Compare2SmilesResponse)
 
@@ -34,9 +33,6 @@ class SdfProcess(BusinessProcess):
         """
         sdf_extractor = self.send_request_sync("Python.bosdf.SdfOperation", msg)
 
-        # persist the molecule
-        self.send_request_sync("Python.bopersist.Persist", CreatePersistenceRequest(filename=msg.filename, properties=sdf_extractor.properties))
-
         return sdf_extractor
 
 class SmilesProcess(BusinessProcess):
@@ -60,11 +56,6 @@ class SmilesProcess(BusinessProcess):
 
         rsp.properties.pka = pka_rsp.pka
         rsp.properties.pka_type = pka_rsp.pka_type
-
-        self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=request.smiles, filename=None))
-
-        #persist the molecule
-        self.send_request_sync("Python.bopersist.Persist", CreatePersistenceRequest(smiles=request.smiles, properties=rsp.properties))
 
         return rsp
 
@@ -108,9 +99,6 @@ class CompareProcess(BusinessProcess):
         prop_smiles = self.extract_smiles_properties(request.smiles)
         # diff the properties
         diff_prop = self.diff_properties(prop_smiles, prop_sdf)
-        # diff the images
-        self.send_request_sync("Python.bomisc.GenerateImageOperation", CreateImageRequest(smiles=request.smiles, filename=request.filename))
-
 
         return CompareResponse(
             prop_smiles=prop_smiles,
