@@ -2,26 +2,23 @@ import React from 'react';
 import '../styles/Ribbon.css';
 
 interface RibbonProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
+  activeMainTab: string;
+  onMainTabChange: (tab: string) => void;
 }
 
-const Ribbon: React.FC<RibbonProps> = ({ activeTab, onTabChange }) => {
-  const tabs = [
-    { id: 'smiles', label: 'SMILES' },
-    { id: 'sdf', label: 'SDF' },
-    { id: 'compareSmiles', label: 'Compare SMILES' },
-    { id: 'compareSDF', label: 'Compare SDF' },
-    { id: 'compareMixed', label: 'Compare SMILES vs SDF' }
+const Ribbon: React.FC<RibbonProps> = ({ activeMainTab, onMainTabChange }) => {
+  const mainTabs = [
+    { id: 'single', label: 'Single Molecule' },
+    { id: 'compare', label: 'Compare Molecules' }
   ];
 
   return (
-    <div className="ribbon">
-      {tabs.map(tab => (
+    <div className="ribbon main-ribbon">
+      {mainTabs.map(tab => (
         <button
           key={tab.id}
-          className={activeTab === tab.id ? 'active' : ''}
-          onClick={() => onTabChange(tab.id)}
+          className={activeMainTab === tab.id ? 'active' : ''}
+          onClick={() => onMainTabChange(tab.id)}
         >
           {tab.label}
         </button>
