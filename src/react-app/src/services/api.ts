@@ -7,7 +7,8 @@ export const uploadSDF = async (file: File) => {
         method: 'POST',
         body: formData,
     });
-    return response.json();
+    const sessionId = response.headers.get('x-session-id');
+    return { data: await response.json(), sessionId };
 };
 
 export const processSMILES = async (smiles: string) => {
@@ -18,7 +19,8 @@ export const processSMILES = async (smiles: string) => {
         },
         body: JSON.stringify({ smiles }),
     });
-    return response.json();
+    const sessionId = response.headers.get('x-session-id');
+    return { data: await response.json(), sessionId: sessionId };
 };
 
 export const getSMILESImage = async (smiles: string) => {
@@ -29,7 +31,9 @@ export const getSMILESImage = async (smiles: string) => {
         },
         body: JSON.stringify({ smiles }),
     });
-    return response.blob();
+    const sessionId = response.headers.get('x-session-id');
+    const blob = await response.blob();
+    return { data: blob, sessionId };
 };
 
 export const getSDFImage = async (file: File) => {
@@ -39,7 +43,9 @@ export const getSDFImage = async (file: File) => {
         method: 'POST',
         body: formData,
     });
-    return response.blob();
+    const sessionId = response.headers.get('x-session-id');
+    const blob = await response.blob();
+    return { data: blob, sessionId };
 };
 
 export const compareSMILES = async (smiles1: string, smiles2: string) => {
@@ -50,7 +56,8 @@ export const compareSMILES = async (smiles1: string, smiles2: string) => {
         },
         body: JSON.stringify({ smiles_a: smiles1, smiles_b: smiles2 }),
     });
-    return response.json();
+    const sessionId = response.headers.get('x-session-id');
+    return { data: await response.json(), sessionId };
 };
 
 export const compareSMILESImage = async (smiles1: string, smiles2: string) => {
@@ -61,7 +68,9 @@ export const compareSMILESImage = async (smiles1: string, smiles2: string) => {
         },
         body: JSON.stringify({ smiles_a: smiles1, smiles_b: smiles2 }),
     });
-    return response.blob();
+    const sessionId = response.headers.get('x-session-id');
+    const blob = await response.blob();
+    return { data: blob, sessionId };
 };
 
 export const compareSDF = async (file1: File, file2: File) => {
@@ -72,7 +81,8 @@ export const compareSDF = async (file1: File, file2: File) => {
         method: 'POST',
         body: formData,
     });
-    return response.json();
+    const sessionId = response.headers.get('x-session-id');
+    return { data: await response.json(), sessionId };
 };
 
 export const compareSDFImage = async (file1: File, file2: File) => {
@@ -83,7 +93,9 @@ export const compareSDFImage = async (file1: File, file2: File) => {
         method: 'POST',
         body: formData,
     });
-    return response.blob();
+    const sessionId = response.headers.get('x-session-id');
+    const blob = await response.blob();
+    return { data: blob, sessionId };
 };
 
 export const compareMixed = async (smiles: string, file: File) => {
@@ -93,7 +105,8 @@ export const compareMixed = async (smiles: string, file: File) => {
         method: 'POST',
         body: formData,
     });
-    return response.json();
+    const sessionId = response.headers.get('x-session-id');
+    return { data: await response.json(), sessionId };
 };
 
 export const compareMixedImage = async (smiles: string, file: File) => {
@@ -103,5 +116,7 @@ export const compareMixedImage = async (smiles: string, file: File) => {
         method: 'POST',
         body: formData,
     });
-    return response.blob();
+    const sessionId = response.headers.get('x-session-id');
+    const blob = await response.blob();
+    return { data: blob, sessionId };
 };

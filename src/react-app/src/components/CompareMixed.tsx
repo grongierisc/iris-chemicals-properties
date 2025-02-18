@@ -29,15 +29,19 @@ const CompareMixed: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<ComparisonResult | null>(null);
   const [image, setImage] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionIdImg, setSessionIdImg] = useState<string | null>(null);
 
   const handleCompare = async () => {
     if (!smiles || !file) return;
 
     try {
-      const data = await compareMixed(smiles, file);
+      const { data, sessionId: compareSessionId } = await compareMixed(smiles, file);
       setResult(data);
+      setSessionId(compareSessionId);
 
-      const imgBlob = await compareMixedImage(smiles, file);
+      const { data: imgBlob, sessionId: imgSessionId } = await compareMixedImage(smiles, file);
+      setSessionIdImg(imgSessionId);
       setImage(URL.createObjectURL(imgBlob));
     } catch (error) {
       console.error('Error:', error);
@@ -116,6 +120,30 @@ const CompareMixed: React.FC = () => {
             <PropertyDisplay properties={result.prop_sdf} title="SDF Properties" />
           </div>
           <DifferenceDisplay differences={result.diff_prop} />
+        </div>
+      )}
+
+      {sessionId && (
+        <div className="session-link">
+          <a 
+            href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Message Trace for Mixed Comparison
+          </a>
+        </div>
+      )}
+
+      {sessionIdImg && (
+        <div className="session-link">
+          <a 
+            href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionIdImg}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Message Trace for Mixed Comparison Image
+          </a>
         </div>
       )}
     </div>

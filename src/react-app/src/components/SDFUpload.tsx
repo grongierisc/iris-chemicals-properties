@@ -22,6 +22,8 @@ const SDFUpload: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
     const [result, setResult] = useState<Properties | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [sessionIdImg, setSessionIdImg] = useState<string | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -34,10 +36,12 @@ const SDFUpload: React.FC = () => {
         if (!file) return;
 
         try {
-            const data = await uploadSDF(file);
+            const { data, sessionId: processSessionId } = await uploadSDF(file);
             setResult(data.properties);
+            setSessionId(processSessionId);
             
-            const imageBlob = await getSDFImage(file);
+            const { data: imageBlob, sessionId: imgSessionId } = await getSDFImage(file);
+            setSessionIdImg(imgSessionId);
             setImageUrl(URL.createObjectURL(imageBlob));
         } catch (error) {
             console.error('Error:', error);
@@ -81,6 +85,30 @@ const SDFUpload: React.FC = () => {
                         )}
                         <PropertyDisplay properties={result} />
                     </div>
+                </div>
+            )}
+
+            {sessionId && (
+                <div className="session-link">
+                    <a 
+                        href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        View Message Trace for SDF Extractor
+                    </a>
+                </div>
+            )}
+
+            {sessionIdImg && (
+                <div className="session-link">
+                    <a 
+                        href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionIdImg}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        View Message Trace for Img SDF
+                    </a>
                 </div>
             )}
         </div>

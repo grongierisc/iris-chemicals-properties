@@ -29,15 +29,19 @@ const CompareSDF: React.FC = () => {
   const [file2, setFile2] = useState<File | null>(null);
   const [result, setResult] = useState<ComparisonResult | null>(null);
   const [image, setImage] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionIdImg, setSessionIdImg] = useState<string | null>(null);
 
   const handleCompare = async () => {
     if (!file1 || !file2) return;
 
     try {
-      const data = await compareSDF(file1, file2);
+      const { data, sessionId: compareSessionId } = await compareSDF(file1, file2);
       setResult(data);
+      setSessionId(compareSessionId);
 
-      const imgBlob = await compareSDFImage(file1, file2);
+      const { data: imgBlob, sessionId: imgSessionId } = await compareSDFImage(file1, file2);
+      setSessionIdImg(imgSessionId);
       setImage(URL.createObjectURL(imgBlob));
     } catch (error) {
       console.error('Error:', error);
@@ -115,6 +119,30 @@ const CompareSDF: React.FC = () => {
             <PropertyDisplay properties={result.prop_b} title="Properties B" />
           </div>
           <DifferenceDisplay differences={result.diff_prop} />
+        </div>
+      )}
+
+      {sessionId && (
+        <div className="session-link">
+          <a 
+            href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Message Trace for SDF Comparison
+          </a>
+        </div>
+      )}
+
+      {sessionIdImg && (
+        <div className="session-link">
+          <a 
+            href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionIdImg}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Message Trace for SDF Comparison Image
+          </a>
         </div>
       )}
     </div>

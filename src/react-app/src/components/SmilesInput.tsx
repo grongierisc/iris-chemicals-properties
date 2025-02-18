@@ -22,14 +22,18 @@ const SmilesInput: React.FC = () => {
     const [smiles, setSmiles] = useState('');
     const [result, setResult] = useState<Properties | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [sessionIdImg, setSessionIdImg] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const data = await processSMILES(smiles);
+            const { data: data, sessionId: processSessionId } = await processSMILES(smiles);
             setResult(data.properties);
+            setSessionId(processSessionId);
             
-            const imageBlob = await getSMILESImage(smiles);
+            const { data: imageBlob, sessionId: imgSessionId } = await getSMILESImage(smiles);
+            setSessionIdImg(imgSessionId)
             setImageUrl(URL.createObjectURL(imageBlob));
         } catch (error) {
             console.error('Error:', error);
@@ -72,6 +76,30 @@ const SmilesInput: React.FC = () => {
                         )}
                         <PropertyDisplay properties={result} />
                     </div>
+                </div>
+            )}
+
+            {sessionId && (
+                <div className="session-link">
+                    <a 
+                        href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        View Message Trace for Smiles Extractor
+                    </a>
+                </div>
+            )}
+
+            {sessionIdImg && (
+                <div className="session-link">
+                    <a 
+                        href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionIdImg}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        View Message Trace for Img Smiles
+                    </a>
                 </div>
             )}
         </div>

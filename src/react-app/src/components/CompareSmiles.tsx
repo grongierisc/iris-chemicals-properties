@@ -29,13 +29,17 @@ const CompareSmiles: React.FC = () => {
   const [smiles2, setSmiles2] = useState('');
   const [result, setResult] = useState<ComparisonResult | null>(null);
   const [image, setImage] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionIdImg, setSessionIdImg] = useState<string | null>(null);
 
   const handleCompare = async () => {
     try {
-      const data = await compareSMILES(smiles1, smiles2);
+      const { data, sessionId: compareSessionId } = await compareSMILES(smiles1, smiles2);
       setResult(data);
+      setSessionId(compareSessionId);
 
-      const imgBlob = await compareSMILESImage(smiles1, smiles2);
+      const { data: imgBlob, sessionId: imgSessionId } = await compareSMILESImage(smiles1, smiles2);
+      setSessionIdImg(imgSessionId);
       setImage(URL.createObjectURL(imgBlob));
     } catch (error) {
       console.error('Error:', error);
@@ -103,6 +107,30 @@ const CompareSmiles: React.FC = () => {
             <PropertyDisplay properties={result.prop_b} title="Properties B" />
           </div>
           <DifferenceDisplay differences={result.diff_prop} />
+        </div>
+      )}
+
+      {sessionId && (
+        <div className="session-link">
+          <a 
+            href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Message Trace for SMILES Comparison
+          </a>
+        </div>
+      )}
+
+      {sessionIdImg && (
+        <div className="session-link">
+          <a 
+            href={`http://localhost:53795/csp/irisapp/EnsPortal.VisualTrace.zen?SESSIONID=${sessionIdImg}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Message Trace for SMILES Comparison Image
+          </a>
         </div>
       )}
     </div>
