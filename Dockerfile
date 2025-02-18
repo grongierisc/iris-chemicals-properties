@@ -1,4 +1,4 @@
-ARG IMAGE=intersystemsdc/iris-community:latest
+ARG IMAGE=intersystemsdc/iris-community:preview
 FROM $IMAGE
 
 # use the root user to install packages
