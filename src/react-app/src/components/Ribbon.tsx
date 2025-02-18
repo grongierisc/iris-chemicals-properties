@@ -8,6 +8,7 @@ interface RibbonProps {
 
 const Ribbon: React.FC<RibbonProps> = ({ activeMainTab, onMainTabChange }) => {
   const mainTabs = [
+    { id: 'overview', label: 'Overview' },
     { id: 'single', label: 'Single Molecule' },
     { id: 'compare', label: 'Compare Molecules' }
   ];

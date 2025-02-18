@@ -7,17 +7,24 @@ import CompareSmiles from './components/CompareSmiles';
 import CompareSDF from './components/CompareSDF';
 import CompareMixed from './components/CompareMixed';
 import SubRibbon from './components/SubRibbon';
+import SmilesExtractor from './components/overview/SmilesExtractor';
+import SDFExtractor from './components/overview/SDFExtractor';
+import CompareOverview from './components/overview/CompareOverview';
+import VectorSearch from './components/overview/VectorSearch';
+import Architecture from './components/overview/Architecture';
 
 function App() {
-  const [activeMainTab, setActiveMainTab] = useState('single');
-  const [activeSubTab, setActiveSubTab] = useState('smiles');
+  const [activeMainTab, setActiveMainTab] = useState('overview');
+  const [activeSubTab, setActiveSubTab] = useState('smilesExtractor');
 
   useEffect(() => {
     // Update subtab when main tab changes
     if (activeMainTab === 'single') {
       setActiveSubTab('smiles');
-    } else {
+    } else if (activeMainTab === 'compare') {
       setActiveSubTab('compareSmiles');
+    } else if (activeMainTab === 'overview') {
+      setActiveSubTab('smilesExtractor');
     }
   }, [activeMainTab]);
 
@@ -33,8 +40,18 @@ function App() {
         return <CompareSDF />;
       case 'compareMixed':
         return <CompareMixed />;
+      case 'smilesExtractor':
+        return <SmilesExtractor />;
+      case 'sdfExtractor':
+        return <SDFExtractor />;
+      case 'compareOverview':
+        return <CompareOverview />;
+      case 'vectorSearch':
+        return <VectorSearch />;
+      case 'architecture':
+        return <Architecture />;
       default:
-        return <SmilesInput />;
+        return <SmilesExtractor />;
     }
   };
 
