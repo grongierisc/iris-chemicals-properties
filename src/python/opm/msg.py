@@ -1,3 +1,4 @@
+from decimal import Decimal
 from grongier.pex import Message
 from dataclasses import dataclass
 from obj import MolProperties
@@ -97,6 +98,39 @@ class CreateImage2SdfRequest(Message):
 
 @dataclass
 class CreatePersistenceRequest(Message):
-    filename:str = None
     smiles:str = None
-    properties:MolProperties = None
+
+@dataclass
+class CreatePersistenceResponse(Message):
+    smiles:str = None
+    embedding:list[float] = None
+
+@dataclass
+class DeletePersistenceRequest(Message):
+    smiles:str = None
+
+@dataclass
+class DeletePersistenceResponse(Message):
+    smiles:str = None
+
+@dataclass
+class SmilesVectorCosineRequest(Message):
+    smiles:str = None
+
+@dataclass
+class SmilesVectorCosine:
+    smiles:str = None
+    embedding:list[float] = None
+    cosine:float = None
+
+@dataclass
+class SmilesVectorCosineResponse(Message):
+    result: list[SmilesVectorCosine] = None
+
+@dataclass
+class AllPersistenceRequest(Message):
+    pass
+
+@dataclass
+class AllPersistenceResponse(Message):
+    result: list[CreatePersistenceResponse] = None

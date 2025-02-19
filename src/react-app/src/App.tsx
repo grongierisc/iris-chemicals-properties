@@ -12,6 +12,7 @@ import SDFExtractor from './components/overview/SDFExtractor';
 import CompareOverview from './components/overview/CompareOverview';
 import VectorSearch from './components/overview/VectorSearch';
 import Architecture from './components/overview/Architecture';
+import SimilaritySearch from './components/vector/SimilaritySearch';
 
 function App() {
   const [activeMainTab, setActiveMainTab] = useState('overview');
@@ -25,6 +26,8 @@ function App() {
       setActiveSubTab('compareSmiles');
     } else if (activeMainTab === 'overview') {
       setActiveSubTab('smilesExtractor');
+    } else if (activeMainTab === 'vector') {
+      setActiveSubTab('similaritySearch');
     }
   }, [activeMainTab]);
 
@@ -50,6 +53,8 @@ function App() {
         return <VectorSearch />;
       case 'architecture':
         return <Architecture />;
+      case 'similaritySearch':
+        return <SimilaritySearch />;
       default:
         return <SmilesExtractor />;
     }

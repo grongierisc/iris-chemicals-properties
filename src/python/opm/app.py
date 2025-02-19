@@ -1,6 +1,5 @@
 import codecs
 import os
-from typing import Tuple
 
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import Response, JSONResponse
@@ -11,7 +10,11 @@ from msg import (
     Compare2SmilesResponse, CompareResponse, SmilesRequest,
     SdfExtractorRequest, Compare2SdfRequest, Compare2SmilesRequest, 
     CreateImage2SdfRequest, CreateImage2SmilesRequest, CreateImageRequest, 
-    CompareRequest
+    CompareRequest,
+    CreatePersistenceRequest, CreatePersistenceResponse, 
+    DeletePersistenceRequest, DeletePersistenceResponse,
+    SmilesVectorCosineRequest, AllPersistenceRequest,
+    SmilesVectorCosineResponse, AllPersistenceResponse,
 )
 from iop import Director
 
@@ -119,6 +122,31 @@ def compare_img(smiles: str, file: UploadFile):
     bs, session_id = get_business_service()
     img_base64 = bs.on_compare_img(request)
     return create_image_response(img_base64, session_id)
+
+# Persistence endpoints
+@app.post("/persistence", response_model=CreatePersistenceResponse)
+def create_persistence(request: CreatePersistenceRequest, response: Response):
+    bs, session_id = get_business_service()
+    response.headers["X-Session-Id"] = session_id
+    return bs.on_query(request)
+
+@app.delete("/persistence", response_model=DeletePersistenceResponse)
+def delete_persistence(request: DeletePersistenceRequest, response: Response):
+    bs, session_id = get_business_service()
+    response.headers["X-Session-Id"] = session_id
+    return bs.on_query(request)
+
+@app.post("/persistence/cosine", response_model=SmilesVectorCosineResponse)
+def smiles_vector_cosine(request: SmilesVectorCosineRequest, response: Response):
+    bs, session_id = get_business_service()
+    response.headers["X-Session-Id"] = session_id
+    return bs.on_query(request)
+
+@app.get("/persistence/all", response_model=AllPersistenceResponse)
+def all_persistence(response: Response):
+    bs, session_id = get_business_service()
+    response.headers["X-Session-Id"] = session_id
+    return bs.on_query(AllPersistenceRequest())
 
 if __name__ == "__main__":
     import uvicorn

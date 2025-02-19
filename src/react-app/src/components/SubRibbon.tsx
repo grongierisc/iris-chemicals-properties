@@ -86,6 +86,17 @@ const SubRibbon: React.FC<SubRibbonProps> = ({ activeMainTab, activeSubTab, onSu
             </button>
           </>
         );
+      case 'vector':
+        return (
+          <>
+            <button
+              className={activeSubTab === 'similaritySearch' ? 'active' : ''}
+              onClick={() => onSubTabChange('similaritySearch')}
+            >
+              Similarity Search
+            </button>
+          </>
+        );
       default:
         return null;
     }

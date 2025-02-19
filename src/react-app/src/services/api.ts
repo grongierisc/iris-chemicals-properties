@@ -120,3 +120,53 @@ export const compareMixedImage = async (smiles: string, file: File) => {
     const blob = await response.blob();
     return { data: blob, sessionId };
 };
+
+export interface PersistenceResult {
+    smiles: string;
+    embedding: number[];
+    cosine: number;
+}
+
+export const createPersistence = async (smiles: string) => {
+    const response = await fetch(`${API_BASE_URL}/persistence`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ smiles }),
+    });
+    const sessionId = response.headers.get('x-session-id');
+    return { data: await response.json(), sessionId };
+};
+
+export const deletePersistence = async (smiles: string) => {
+    const response = await fetch(`${API_BASE_URL}/persistence`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ smiles }),
+    });
+    const sessionId = response.headers.get('x-session-id');
+    return { data: await response.json(), sessionId };
+};
+
+export const getAllPersistence = async () => {
+    const response = await fetch(`${API_BASE_URL}/persistence/all`);
+    const results = await response.json();
+    const sessionId = response.headers.get('x-session-id');
+    return { data: results.result, sessionId };
+};
+
+export const getSimilarMolecules = async (smiles: string, threshold: number) => {
+    const response = await fetch(`${API_BASE_URL}/persistence/cosine`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ smiles, threshold }),
+    });
+    const sessionId = response.headers.get('x-session-id');
+    const results = await response.json();
+    return { data: results, sessionId };
+};

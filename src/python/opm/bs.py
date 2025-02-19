@@ -61,3 +61,5 @@ class Rest(BusinessService):
         
         return img_stream
     
+    def on_query(self, msg):
+        return self.send_request_sync('Python.bopersist.Persist', msg)
