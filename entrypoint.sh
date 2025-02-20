@@ -12,4 +12,7 @@ iop --migrate /irisdev/app/src/python/opm/settings.py
 iop --default Opm.Production
 
 export LD_LIBRARY_PATH=${ISC_PACKAGE_INSTALLDIR}/bin
-iop --start
+iop --start --detach
+
+# start the web server
+python3 /irisdev/app/src/python/opm/app.py

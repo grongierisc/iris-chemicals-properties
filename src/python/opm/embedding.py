@@ -24,3 +24,8 @@ def get_embedding(smiles:str,config)->list:
     outputs = model.forward(input_ids=inputs["input_ids"])
     embeddings = outputs.last_hidden_state
     return str(embeddings.tolist()[0][0])
+
+if __name__ == "__main__":
+    # two similar SMILES aspergillamide and aspergillamide B
+    smiles_a = "CC(C)C[C@@H]1"
+    smiles_b = "CC(C)C[C@H]1"

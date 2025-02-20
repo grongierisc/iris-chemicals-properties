@@ -16,6 +16,15 @@ services:
       - ./:/irisdev/app
     entrypoint: ["sh", "/irisdev/app/entrypoint.sh"]
 
+  webui:
+    build: 
+      context: src/react-app
+      dockerfile: Dockerfile
+    ports:
+      - 8081:80
+    depends_on:
+      - iris
+
   # notebook:
   #   build: 
   #     context: notebook
