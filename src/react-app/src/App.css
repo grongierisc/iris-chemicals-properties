@@ -17,8 +17,9 @@ main {
 
 .smiles-input, .sdf-upload {
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #404040;
   border-radius: 8px;
+  background-color: #2a2a2a;
 }
 
 form {
@@ -31,6 +32,9 @@ form {
 input[type="text"] {
   padding: 8px;
   width: 300px;
+  background-color: #2a2a2a;
+  border: 1px solid #404040;
+  color: #e0e0e0;
 }
 
 button {
@@ -43,7 +47,8 @@ button {
 }
 
 button:disabled {
-  background-color: #ccc;
+  background-color: #404040;
+  color: #808080;
 }
 
 .result-image {
@@ -56,8 +61,9 @@ button:disabled {
 
 .result-data {
   text-align: left;
-  background-color: #f5f5f5;
+  background-color: #2a2a2a;
   padding: 15px;
   border-radius: 4px;
+  border: 1px solid #404040;
   overflow-x: auto;
 }
