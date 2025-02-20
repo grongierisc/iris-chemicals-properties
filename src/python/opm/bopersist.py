@@ -1,4 +1,4 @@
-from grongier.pex import BusinessOperation, Utils
+from grongier.pex import BusinessOperation
 
 from sqlalchemy import create_engine,text
 
@@ -9,10 +9,6 @@ from msg import (
     SmilesVectorCosineResponse, AllPersistenceResponse,
     SmilesVectorCosine
 )
-
-from transformers import AutoTokenizer, RobertaModel
-
-import iris
 
 INIT_EMBEDDING = """
 INSERT INTO %Embedding.Config (Name, Configuration, EmbeddingClass, VectorLength, Description)
@@ -64,6 +60,7 @@ class Persist(BusinessOperation):
             connection.execute(
                 text(CREATE_TABLE)
             )
+            connection.commit()
 
     def on_create(self, msg:CreatePersistenceRequest):
         with self.engine.connect() as connection:

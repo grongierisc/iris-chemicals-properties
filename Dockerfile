@@ -13,6 +13,7 @@ USER ${ISC_PACKAGE_MGRUSER}
 COPY . .
 
 # install required packages
+RUN pip3 install torch --index-url https://download.pytorch.org/whl/cpu
 RUN pip3 install -r requirements.txt
 
 # download the embeddings
