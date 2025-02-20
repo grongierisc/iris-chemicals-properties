@@ -15,9 +15,9 @@ const Architecture: React.FC = () => {
       <div className='overview-section'>
       <p>
       This project aim to showcase the use of the <a href="https://www.intersystems.com/products/intersystems-iris/">IRIS</a> to 
-      extract chemicals properties and use them in a vector database.
-      </p>
-      <p>The project is composed of:</p>
+      extract chemicals properties and use them in a vector database.<br/>
+      <br/>
+      The project is composed of:<br/>
       <ul>
       <li>
         <strong>Smiles processing</strong>
@@ -46,6 +46,7 @@ const Architecture: React.FC = () => {
         </ul>
       </li>
       </ul>
+      </p>
     </div>
     </div>
   );
