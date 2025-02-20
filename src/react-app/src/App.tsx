@@ -16,7 +16,7 @@ import SimilaritySearch from './components/vector/SimilaritySearch';
 
 function App() {
   const [activeMainTab, setActiveMainTab] = useState('overview');
-  const [activeSubTab, setActiveSubTab] = useState('smilesExtractor');
+  const [activeSubTab, setActiveSubTab] = useState('architecture');
 
   useEffect(() => {
     // Update subtab when main tab changes
@@ -25,7 +25,7 @@ function App() {
     } else if (activeMainTab === 'compare') {
       setActiveSubTab('compareSmiles');
     } else if (activeMainTab === 'overview') {
-      setActiveSubTab('smilesExtractor');
+      setActiveSubTab('architecture');
     } else if (activeMainTab === 'vector') {
       setActiveSubTab('similaritySearch');
     }

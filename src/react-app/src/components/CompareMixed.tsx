@@ -31,10 +31,12 @@ const CompareMixed: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sessionIdImg, setSessionIdImg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCompare = async () => {
     if (!smiles || !file) return;
 
+    setIsLoading(true);
     try {
       const { data, sessionId: compareSessionId } = await compareMixed(smiles, file);
       setResult(data);
@@ -45,6 +47,8 @@ const CompareMixed: React.FC = () => {
       setImage(URL.createObjectURL(imgBlob));
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -103,12 +107,19 @@ const CompareMixed: React.FC = () => {
           />
           {file && <span className="file-name">{file.name}</span>}
         </div>
-        <button onClick={handleCompare} disabled={!smiles || !file}>
-          Compare
+        <button onClick={handleCompare} disabled={!smiles || !file || isLoading}>
+          {isLoading ? 'Processing...' : 'Compare'}
         </button>
       </div>
 
-      {result && (
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+          <p>Processing your request...</p>
+        </div>
+      )}
+
+      {result && !isLoading && (
         <div className="results-container">
           <div className="properties-row">
             <PropertyDisplay properties={result.prop_smiles} title="SMILES Properties" />

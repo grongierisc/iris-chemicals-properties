@@ -31,9 +31,11 @@ const CompareSmiles: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sessionIdImg, setSessionIdImg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCompare = async () => {
     try {
+      setIsLoading(true);
       const { data, sessionId: compareSessionId } = await compareSMILES(smiles1, smiles2);
       setResult(data);
       setSessionId(compareSessionId);
@@ -43,6 +45,8 @@ const CompareSmiles: React.FC = () => {
       setImage(URL.createObjectURL(imgBlob));
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,6 +83,11 @@ const CompareSmiles: React.FC = () => {
 
   return (
     <div className="compare-smiles-container">
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner" />
+        </div>
+      )}
       <div className="input-section">
         <input
           type="text"

@@ -24,9 +24,11 @@ const SmilesInput: React.FC = () => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [sessionIdImg, setSessionIdImg] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
         try {
             const { data: data, sessionId: processSessionId } = await processSMILES(smiles);
             setResult(data.properties);
@@ -37,6 +39,8 @@ const SmilesInput: React.FC = () => {
             setImageUrl(URL.createObjectURL(imageBlob));
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -56,6 +60,11 @@ const SmilesInput: React.FC = () => {
 
     return (
         <div className="smiles-input compare-smiles-container">
+            {isLoading && (
+                <div className="loading-overlay">
+                    <div className="loading-spinner"></div>
+                </div>
+            )}
             <form onSubmit={handleSubmit} className="input-section">
                 <input
                     type="text"
