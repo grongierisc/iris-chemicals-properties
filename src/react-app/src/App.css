@@ -67,3 +67,11 @@ button:disabled {
   border: 1px solid #404040;
   overflow-x: auto;
 }
+a {
+  color: #66b3ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

@@ -1,12 +1,27 @@
 .sql-highlight {
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #e8f4fc; /* Updated background color */
+    color: #1a1a1a; /* Updated text color */
     font-family: 'Courier New', Courier, monospace;
     padding: 10px;
     border-radius: 5px;
     overflow-x: auto;
     text-align: left;
+    border: 1px solid #b3d4fc; /* Added border */
 }
+
+.sql-highlight .sql-keyword {
+    color: #3f3ad7; /* Color for SQL keywords */
+    font-weight: bold;
+}
+
+.sql-highlight .sql-function {
+    color: #6f42c1; /* Color for SQL functions */
+}
+
+.sql-highlight .json-content {
+    color: #005cc5; /* Color for JSON content */
+}
+
 .overview-section {
     display: flex;
     flex-direction: column;

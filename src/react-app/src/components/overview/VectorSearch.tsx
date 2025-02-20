@@ -13,8 +13,10 @@ const VectorSearch: React.FC = () => {
         <br />
         Example of a query: <br />
         <p className="sql-highlight">
-          SELECT TOP 5 Smiles, SmilesEmbedding, VECTOR_COSINE(SmilesEmbedding,EMBEDDING(:smiles,'opm-transformers-config')) FROM Opm.VectorTable
-          ORDER BY VECTOR_COSINE(SmilesEmbedding,EMBEDDING(:smiles,'opm-transformers-config')) DESC
+          <span className="sql-keyword">SELECT</span> <span className="sql-keyword">TOP</span> 5 Smiles, SmilesEmbedding, 
+          <span className="sql-function"> VECTOR_COSINE</span>(SmilesEmbedding,<span className="sql-function">EMBEDDING</span>(:smiles,&apos;opm-transformers-config&apos;)) 
+          <span className="sql-keyword"> FROM</span> Opm.VectorTable
+          <span className="sql-keyword"> ORDER BY </span> <span className="sql-function">VECTOR_COSINE</span>(SmilesEmbedding,<span className="sql-function">EMBEDDING</span>(:smiles,&apos;opm-transformers-config&apos;)) <span className="sql-keyword">DESC</span>
         </p>
         The EMBEDDING uses two parameters: <br />
         <ul>
@@ -22,10 +24,10 @@ const VectorSearch: React.FC = () => {
         <li>the model name is configured like this</li>
         </ul>
         <p className="sql-highlight">
-          INSERT INTO %Embedding.Config (Name, Configuration, EmbeddingClass, VectorLength, Description)<br />
-          VALUES (&apos;opm-transformers-config&apos;,<br />
-            &apos;&#123;&quot;modelName&quot;:&quot;seyonec/PubChem10M_SMILES_BPE_450k&quot;,<br />
-            &quot;hfCachePath&quot;:&quot;/usr/irissys/hfCache&quot;&#125;&apos;,<br />
+          <span className="sql-keyword">INSERT INTO</span> %Embedding.Config (Name, Configuration, EmbeddingClass, VectorLength, Description)<br />
+          <span className="sql-keyword">VALUES</span> (&apos;opm-transformers-config&apos;,<br />
+            <span className="json-content">&apos;&#123;&quot;modelName&quot;:&quot;seyonec/PubChem10M_SMILES_BPE_450k&quot;,<br />
+            &quot;hfCachePath&quot;:&quot;/usr/irissys/hfCache&quot;&#125;&apos;</span>,<br />
             &apos;Opm.Embedding&apos;,<br />
             768,<br />
             &apos;embedding model&apos;<br />
