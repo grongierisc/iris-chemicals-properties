@@ -19,6 +19,12 @@ const SubRibbon: React.FC<SubRibbonProps> = ({ activeMainTab, activeSubTab, onSu
             >
               Architecture
             </button>
+            <button
+              className={activeSubTab === 'definitons' ? 'active' : ''}
+              onClick={() => onSubTabChange('definitions')}
+            >
+              Definitions
+            </button>
             <button 
               className={activeSubTab === 'smilesExtractor' ? 'active' : ''}
               onClick={() => onSubTabChange('smilesExtractor')}

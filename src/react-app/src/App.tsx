@@ -13,6 +13,7 @@ import CompareOverview from './components/overview/CompareOverview';
 import VectorSearch from './components/overview/VectorSearch';
 import Architecture from './components/overview/Architecture';
 import SimilaritySearch from './components/vector/SimilaritySearch';
+import Definitions from './components/overview/Definitions';
 
 function App() {
   const [activeMainTab, setActiveMainTab] = useState('overview');
@@ -55,6 +56,8 @@ function App() {
         return <Architecture />;
       case 'similaritySearch':
         return <SimilaritySearch />;
+      case 'definitions':
+        return <Definitions />;
       default:
         return <SmilesExtractor />;
     }
