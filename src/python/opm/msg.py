@@ -122,6 +122,7 @@ class SmilesVectorCosine:
     smiles:str = None
     embedding:list[float] = None
     cosine:float = None
+    cosine_random:float = None
 
 @dataclass
 class SmilesVectorCosineResponse(Message):

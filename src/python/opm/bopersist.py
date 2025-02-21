@@ -20,11 +20,23 @@ INSERT INTO %Embedding.Config (Name, Configuration, EmbeddingClass, VectorLength
           'embedding model')
 """
 
+INIT_EMBEDDING_RANDOM = """
+INSERT INTO %Embedding.Config (Name, Configuration, EmbeddingClass, Description)
+  VALUES ('sentence-transformers-config',
+          '{"modelName":"sentence-transformers/all-MiniLM-L6-v2",
+            "hfCachePath":"/usr/irissys/hfCache",
+            "maxTokens": 256,
+            "checkTokenCount": true}',
+          '%Embedding.SentenceTransformers',
+          'a small SentenceTransformers embedding model')
+"""
+
 CREATE_TABLE = """
 CREATE TABLE IF NOT EXISTS
 Opm.VectorTable (
   Smiles VARCHAR(250) PRIMARY KEY UNIQUE,
-  SmilesEmbedding EMBEDDING('opm-transformers-config','Smiles')
+  SmilesEmbedding EMBEDDING('opm-transformers-config','Smiles'),
+  RandomEmbedding EMBEDDING('sentence-transformers-config','Smiles')
   )
 """
 
@@ -41,7 +53,7 @@ DELETE FROM Opm.VectorTable where Smiles = :smiles
 """
 
 SEARCH_VECTOR = """
-SELECT TOP 5 Smiles, SmilesEmbedding, VECTOR_COSINE(SmilesEmbedding,EMBEDDING(:smiles,'opm-transformers-config')) FROM Opm.VectorTable
+SELECT Smiles, SmilesEmbedding, VECTOR_COSINE(SmilesEmbedding,EMBEDDING(:smiles,'opm-transformers-config')),VECTOR_COSINE(RandomEmbedding,EMBEDDING(:smiles,'sentence-transformers-config')) FROM Opm.VectorTable
 ORDER BY VECTOR_COSINE(SmilesEmbedding,EMBEDDING(:smiles,'opm-transformers-config')) DESC
 """
 
@@ -54,6 +66,9 @@ class Persist(BusinessOperation):
             try:
                 connection.execute(
                     text(INIT_EMBEDDING)
+                )
+                connection.execute(
+                    text(INIT_EMBEDDING_RANDOM)
                 )
             except Exception as e:
                 self.log_warning(f"Error initializing embedding: {e}")
@@ -87,7 +102,8 @@ class Persist(BusinessOperation):
                 text(DELETE_VECTOR),
                 {"smiles":msg.smiles}
             )
-        return DeletePersistenceResponse(smiles=msg.smiles, embedding=None)
+            connection.commit()
+        return DeletePersistenceResponse(smiles=msg.smiles)
     
     def on_smiles_vector_cosine(self, msg:SmilesVectorCosineRequest):
         with self.engine.connect() as connection:
@@ -96,7 +112,11 @@ class Persist(BusinessOperation):
                 {"smiles":msg.smiles}
             ).fetchall()
         return SmilesVectorCosineResponse(
-            result=[SmilesVectorCosine(smiles=row[0], embedding=self.str_to_emb(row[1]), cosine=float(row[2])) for row in result]
+            result=[SmilesVectorCosine(
+                smiles=row[0],
+                embedding=self.str_to_emb(row[1]), 
+                cosine=float(row[2]), 
+                cosine_random=float(row[3])) for row in result]
         )
 
 
