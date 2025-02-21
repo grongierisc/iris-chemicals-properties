@@ -14,7 +14,7 @@ const Architecture: React.FC = () => {
       </div>
       <div className='overview-section'>
       <p>
-      This project aim to showcase the use of the <a href="https://www.intersystems.com/products/intersystems-iris/">IRIS</a> to 
+      This project aim to showcase the use of the <a href="http://localhost:53795/csp/irisapp/EnsPortal.ProductionConfig.zen?$NAMESPACE=IRISAPP&">IRIS</a> to 
       extract chemicals properties and use them in a vector database.<br/>
       <br/>
       The project is composed of:<br/>

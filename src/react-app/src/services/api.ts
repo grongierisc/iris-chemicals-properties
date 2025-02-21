@@ -121,12 +121,6 @@ export const compareMixedImage = async (smiles: string, file: File) => {
     return { data: blob, sessionId };
 };
 
-export interface PersistenceResult {
-    smiles: string;
-    embedding: number[];
-    cosine: number;
-}
-
 export const createPersistence = async (smiles: string) => {
     const response = await fetch(`${API_BASE_URL}/persistence`, {
         method: 'POST',
@@ -170,3 +164,8 @@ export const getSimilarMolecules = async (smiles: string, threshold: number) => 
     const results = await response.json();
     return { data: results, sessionId };
 };
+
+export const getIupacName = async (smiles: string) => {
+    const response = await fetch(`https://cactus.nci.nih.gov/chemical/structure/${smiles}/iupac_name`);
+    return response.text();
+}

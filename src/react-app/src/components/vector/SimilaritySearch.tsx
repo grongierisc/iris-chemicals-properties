@@ -1,12 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { createPersistence, deletePersistence, getAllPersistence, getSimilarMolecules } from '../../services/api';
-import { Molecule, SearchResult } from '../../types/molecule';
+import { createPersistence, deletePersistence, getAllPersistence, getSimilarMolecules, getIupacName } from '../../services/api';
+import { Molecule } from '../../types/molecule';
 
 const SimilaritySearch: React.FC = () => {
   const [molecules, setMolecules] = useState<Molecule[]>([]);
   const [searchSmiles, setSearchSmiles] = useState('');
   const [newSmiles, setNewSmiles] = useState('');
   const [loading, setLoading] = useState(false);
+  const [iupacLoadingStates, setIupacLoadingStates] = useState<{ [key: string]: boolean }>({});
+
+  const fetchIupacWithTimeout = async (smiles: string): Promise<string> => {
+    try {
+      const timeoutPromise = new Promise<string>((_, reject) =>
+        setTimeout(() => reject(new Error('IUPAC name fetch timeout')), 5000)
+      );
+      const iupacPromise = getIupacName(smiles);
+      const result = await Promise.race([iupacPromise, timeoutPromise]);
+      return result;
+    } catch (error) {
+      console.warn(`Failed to fetch IUPAC name for ${smiles}:`, error);
+      return '';
+    }
+  };
+
+  const loadIupacName = async (molecule: Molecule, index: number) => {
+    setIupacLoadingStates(prev => ({ ...prev, [molecule.smiles]: true }));
+    const iupacName = await fetchIupacWithTimeout(molecule.smiles);
+    setMolecules(prev => {
+      const updated = [...prev];
+      updated[index] = { ...molecule, iupacName };
+      return updated;
+    });
+    setIupacLoadingStates(prev => ({ ...prev, [molecule.smiles]: false }));
+  };
 
   useEffect(() => {
     loadMolecules();
@@ -16,7 +42,16 @@ const SimilaritySearch: React.FC = () => {
     try {
       setLoading(true);
       const { data } = await getAllPersistence();
-      setMolecules(data || []);
+      const basicMolecules = (data || []).map((molecule: Molecule) => ({
+        ...molecule,
+        iupacName: ''
+      }));
+      setMolecules(basicMolecules);
+      
+      // Start loading IUPAC names after setting initial molecules
+      basicMolecules.forEach((molecule: Molecule, index: number) => {
+        loadIupacName(molecule, index);
+      });
     } catch (error) {
       console.error('Error loading molecules:', error);
     } finally {
@@ -46,12 +81,20 @@ const SimilaritySearch: React.FC = () => {
     try {
       setLoading(true);
       const { data } = await getSimilarMolecules(searchSmiles, 0);
-      const searchResults = data.result as SearchResult[];
-      setMolecules(searchResults.map(result => ({
+      const searchResults = data.result as Molecule[];
+      const basicResults = searchResults.map(result => ({
         smiles: result.smiles,
         embedding: result.embedding || [],
-        cosine: result.cosine
-      })));
+        cosine: result.cosine,
+        cosine_random: result.cosine_random,
+        iupacName: ''
+      }));
+      setMolecules(basicResults);
+      
+      // Start loading IUPAC names after setting initial results
+      basicResults.forEach((molecule, index) => {
+        loadIupacName(molecule, index);
+      });
     } catch (error) {
       console.error('Error searching molecules:', error);
     } finally {
@@ -120,15 +163,26 @@ const SimilaritySearch: React.FC = () => {
           <table className="min-w-full border rounded">
               <thead className="bg-gray-50">
                   <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IUPAC Name</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SMILES</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Embedding</th>
-                      {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Similarity</th>}
+                      {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Similarity Chem Bert</th>}
+                      {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Similarity Native Bert</th>}
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                  {molecules.map((molecule) => (
+                  {molecules.map((molecule, index) => (
                       <tr key={molecule.smiles}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900">
+                                {iupacLoadingStates[molecule.smiles] ? (
+                                  <span className="text-gray-400">Loading...</span>
+                                ) : molecule.iupacName || (
+                                  <span className="text-gray-400">Not available</span>
+                                )}
+                              </div>
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-sm text-gray-900">{molecule.smiles}</div>
                           </td>
@@ -141,6 +195,13 @@ const SimilaritySearch: React.FC = () => {
                               <td className="px-6 py-4 whitespace-nowrap">
                                   <div className="text-sm text-gray-900">
                                       {molecule.cosine?.toFixed(4) || '-'}
+                                  </div>
+                              </td>
+                          )}
+                          {searchSmiles && (
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                  <div className="text-sm text-gray-900">
+                                      {molecule.cosine_random?.toFixed(4) || '-'}
                                   </div>
                               </td>
                           )}
