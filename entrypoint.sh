@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export LD_LIBRARY_PATH=${ISC_PACKAGE_INSTALLDIR}/bin
 # start iris
 /iris-main "$@" &
 
@@ -11,7 +11,6 @@ iop --migrate /irisdev/app/src/python/opm/settings.py
 
 iop --default Opm.Production
 
-export LD_LIBRARY_PATH=${ISC_PACKAGE_INSTALLDIR}/bin
 iop --start --detach
 
 # start the web server
