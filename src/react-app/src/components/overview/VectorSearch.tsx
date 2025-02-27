@@ -8,8 +8,11 @@ const VectorSearch: React.FC = () => {
       <div className="overview-section">
       <p>
         Store the SMILES representation of the chemicals in a vector database<br />
-        Using a ChemBert model to extract the vector representation of the chemicals<br />
+        Using a MiniLM model to extract the vector representation of the chemicals<br />
+        and MACCS fingerprints for similarity search<br />
+        <br />
         Similarities between the vectors are calculated using the cosine similarity<br />
+        and the Jaccard similarity for the MACCS fingerprints<br />
         <br />
         Example of a query: <br />
         <p className="sql-highlight">
@@ -24,15 +27,25 @@ const VectorSearch: React.FC = () => {
         <li>the model name is configured like this</li>
         </ul>
         <p className="sql-highlight">
-          <span className="sql-keyword">INSERT INTO</span> %Embedding.Config (Name, Configuration, EmbeddingClass, VectorLength, Description)<br />
-          <span className="sql-keyword">VALUES</span> (&apos;opm-transformers-config&apos;,<br />
-            <span className="json-content">&apos;&#123;&quot;modelName&quot;:&quot;seyonec/PubChem10M_SMILES_BPE_450k&quot;,<br />
-            &quot;hfCachePath&quot;:&quot;/usr/irissys/hfCache&quot;&#125;&apos;</span>,<br />
-            &apos;Opm.Embedding&apos;,<br />
-            768,<br />
-            &apos;embedding model&apos;<br />
-          )
+        <span className="sql-keyword">INSERT INTO</span> %Embedding.Config (Name, Configuration, EmbeddingClass, Description)
+          <span className="sql-keyword">VALUES</span> (&apos;sentence-transformers-config&apos;,
+          &apos;&#123;&quot;modelName&quot;:&quot;sentence-transformers/all-MiniLM-L6-v2&quot;,
+            &quot;hfCachePath&quot;:&quot;/usr/irissys/hfCache&quot;,
+            &quot;maxTokens&quot;: 256,
+            &quot;checkTokenCount&quot;: true&#125;&apos;,
+          &apos;%Embedding.SentenceTransformers&apos;,
+          &apos;a small SentenceTransformers embedding model&apos;)
         </p>
+        The aim of this demo is to show how to use the vector search capabilities of IRIS<br />
+        Then to explain which embedding model is best suited for the task<br />
+        Same for the similarity search algorithm<br />
+        <br />
+        COSINE distance is defined as the cosine of the angle between two vectors<br />
+        JACCARD distance is defined as the intersection over the union of the two sets<br />
+        <br />
+        The MACCS fingerprints are a set of 166 bits that represent the presence or absence of substructures in the molecule<br />
+        The MiniLM model is a transformer model that is trained on a large corpus of text, basically this model is not suited for the task<br />
+        <br />
       </p>
     </div>
     </div>

@@ -166,6 +166,6 @@ export const getSimilarMolecules = async (smiles: string, threshold: number) => 
 };
 
 export const getIupacName = async (smiles: string) => {
-    const response = await fetch(`https://cactus.nci.nih.gov/chemical/structure/${smiles}/iupac_name`);
+    const response = await fetch(`${API_BASE_URL}/iupac/${smiles}/iupac_name`);
     return response.text();
 }

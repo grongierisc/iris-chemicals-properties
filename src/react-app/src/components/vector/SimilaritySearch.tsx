@@ -85,6 +85,7 @@ const SimilaritySearch: React.FC = () => {
       const basicResults = searchResults.map(result => ({
         smiles: result.smiles,
         embedding: result.embedding || [],
+        embedding_random: result.embedding_random || [],
         cosine: result.cosine,
         cosine_random: result.cosine_random,
         iupacName: ''
@@ -159,15 +160,17 @@ const SimilaritySearch: React.FC = () => {
               </button>
           </div>
       </div>
-  </div><div className="overflow-x-auto">
-          <table className="min-w-full border rounded">
+  </div>
+      <div className="max-w-7xl mx-auto overflow-x-auto">
+          <table className="w-full border rounded">
               <thead className="bg-gray-50">
                   <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IUPAC Name</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SMILES</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Embedding</th>
-                      {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Similarity Chem Bert</th>}
-                      {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Similarity Native Bert</th>}
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MACCS</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MiniLM</th>
+                      {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jaccard MACCS</th>}
+                      {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cosine MiniLM</th>}
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
               </thead>
@@ -188,7 +191,12 @@ const SimilaritySearch: React.FC = () => {
                           </td>
                           <td className="px-6 py-4">
                               <div className="text-sm text-gray-500 truncate max-w-md">
-                                  [{molecule.embedding.slice(0, 3).join(', ')}...]
+                                  [{molecule.embedding.slice(160,).join(', ')}...]
+                              </div>
+                          </td>
+                          <td className="px-6 py-4">
+                              <div className="text-sm text-gray-500 truncate max-w-md">
+                                  [{molecule.embedding_random.slice(0, 3).join(', ')}...]
                               </div>
                           </td>
                           {searchSmiles && (
