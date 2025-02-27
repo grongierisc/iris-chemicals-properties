@@ -103,7 +103,8 @@ class CreatePersistenceRequest(Message):
 @dataclass
 class CreatePersistenceResponse(Message):
     smiles:str = None
-    embedding:list[float] = None
+    embedding:list[int] = None
+    embedding_random:list[float] = None
 
 @dataclass
 class DeletePersistenceRequest(Message):
@@ -120,7 +121,8 @@ class SmilesVectorCosineRequest(Message):
 @dataclass
 class SmilesVectorCosine:
     smiles:str = None
-    embedding:list[float] = None
+    embedding:list[int] = None
+    embedding_random:list[float] = None
     cosine:float = None
     cosine_random:float = None
 

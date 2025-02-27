@@ -10,4 +10,5 @@ joblib>=1.2.0
 sqlalchemy-iris>=0.5.0
 uvicorn>=0.15.0
 huggingface-hub
-sentence_transformers
+sentence-transformers
+datamol

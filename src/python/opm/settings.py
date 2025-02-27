@@ -6,6 +6,15 @@ from bosdf import SdfOperation
 from bopersist import Persist
 from bs import Rest
 
+# preload models from persistence
+bo = Persist()
+bo.log_info("Preloading models...", to_console=True)
+try:
+    bo.on_init()
+except Exception as e:
+    bo.log_error(f"Error preloading models: {e}", to_console=True)
+bo.log_info("Models preloaded", to_console=True)
+
 CLASSES = {
     'Python.bomisc.IUPACOperation': IUPACOperation,
     'Python.bomisc.GenerateImageOperation': GenerateImageOperation,

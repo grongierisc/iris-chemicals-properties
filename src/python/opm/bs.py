@@ -63,3 +63,7 @@ class Rest(BusinessService):
     
     def on_query(self, msg):
         return self.send_request_sync('Python.bopersist.Persist', msg)
+    
+    def on_iupac(self, msg):
+        rsp= self.send_request_sync('Python.bomisc.IUPACOperation', msg)
+        return rsp.properties.iupac_name

@@ -11,10 +11,27 @@ import requests
 
 import iris
 
+from transformers import AutoTokenizer, MT5ForConditionalGeneration
+
 class IUPACOperation(BusinessOperation):
     """
     IUPACOperation is a chemical operation that returns the IUPAC name of the molecule.
     """
+    def on_init(self):
+        self.cache = {
+            'O': 'Water',
+            'CCO': 'Ethanol',
+            'CO': 'Methanol',
+            'CC(C)Cc1ccc(cc1)[C@@H](C)C(=O)O': 'Ibuprofen',
+            'CC(Cc1ccc(cc1)C(C(=O)O)C)C': 'Ibuprofen ISO',
+            'Cc1ccccc1': 'Toluene ISO',
+            'CC1=CC=CC=C1': 'Toluene',
+            'CC(=O)OC1=CC=CC=C1C(=O)O': 'Aspirin',
+            'CC(=O)NC1=CC=C(C=C1)O': 'Paracetamol',
+            'CC(=O)O[C@H]1C=C[C@H]2[C@H]3CC4=C5[C@]2([C@H]1OC5=C(C=C4)OC(=O)C)CCN3C': 'Heroin',
+            'CN1CC[C@]23[C@@H]4[C@H]1CC5=C2C(=C(C=C5)O)O[C@H]3[C@H](C=C4)O': 'Morphine',
+        }
+
     def process(self, request:SmilesRequest) -> SmilesResponse:
         """
         Processes the molecule and returns the IUPAC name of the molecule.
@@ -23,6 +40,10 @@ class IUPACOperation(BusinessOperation):
         :return: The IUPAC name of the molecule.
         """
         rsp = SmilesResponse()
+        if request.smiles in self.cache:
+            rsp.properties = {}
+            rsp.properties['iupac_name'] = self.cache[request.smiles]
+            return rsp
         mol = Chem.MolFromSmiles(request.smiles)
         rsp.properties = {}
         rsp.properties['iupac_name'] = self._calculate_iupac_name(mol)
@@ -37,7 +58,7 @@ class IUPACOperation(BusinessOperation):
         url = CACTUS.format(smiles, rep)
         # try catch block to handle timeout
         try:
-            response = requests.get(url,timeout=10)
+            response = requests.get(url,timeout=2)
         except Exception as e:
             self.log_warning(str(e))
             return None

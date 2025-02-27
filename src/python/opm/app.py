@@ -148,6 +148,12 @@ def all_persistence(response: Response):
     response.headers["X-Session-Id"] = session_id
     return bs.on_query(AllPersistenceRequest())
 
+@app.get("/iupac/{smiles}/iupac_name")
+def iupac_name(smiles: str):
+    msg = SmilesRequest(smiles=smiles)
+    bs, _ = get_business_service()
+    return bs.on_iupac(msg)
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=53773)
