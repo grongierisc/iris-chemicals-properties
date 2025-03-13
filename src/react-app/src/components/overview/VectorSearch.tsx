@@ -1,5 +1,7 @@
 import React from 'react';
 import './Overview.css';
+import cosine from '../../imgs/cosine.png';
+import jaccard from '../../imgs/jaccard.png';
 
 const VectorSearch: React.FC = () => {
   return (
@@ -41,7 +43,21 @@ const VectorSearch: React.FC = () => {
         Same for the similarity search algorithm<br />
         <br />
         COSINE distance is defined as the cosine of the angle between two vectors<br />
+        <div className="text-center mt-4">
+        <img 
+          src={cosine} 
+          alt="Chemical Properties System Architecture" 
+          style={{ maxWidth: '100%', height: 'auto' }}
+        />
+        </div>
         JACCARD distance is defined as the intersection over the union of the two sets<br />
+        <div className="text-center mt-4">
+        <img 
+          src={jaccard} 
+          alt="Chemical Properties System Architecture" 
+          style={{ maxWidth: '100%', height: 'auto' }}
+        />
+        </div>
         <br />
         The MACCS fingerprints are a set of 166 bits that represent the presence or absence of substructures in the molecule<br />
         The MiniLM model is a transformer model that is trained on a large corpus of text, basically this model is not suited for the task<br />
