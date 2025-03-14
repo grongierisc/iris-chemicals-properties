@@ -13,6 +13,9 @@ const VectorSearch: React.FC = () => {
         Using a MiniLM model to extract the vector representation of the chemicals<br />
         and MACCS fingerprints for similarity search<br />
         <br />
+        The MACCS fingerprints are a set of 166 bits that represent the presence or absence of substructures in the molecule<br />
+        The MiniLM model is a transformer model that is trained on a large corpus of text, basically this model is not suited for the task<br />
+        <br />
         Similarities between the vectors are calculated using the cosine similarity<br />
         and the Jaccard similarity for the MACCS fingerprints<br />
         <br />
@@ -58,9 +61,6 @@ const VectorSearch: React.FC = () => {
           style={{ maxWidth: '100%', height: 'auto' }}
         />
         </div>
-        <br />
-        The MACCS fingerprints are a set of 166 bits that represent the presence or absence of substructures in the molecule<br />
-        The MiniLM model is a transformer model that is trained on a large corpus of text, basically this model is not suited for the task<br />
         <br />
       </p>
     </div>

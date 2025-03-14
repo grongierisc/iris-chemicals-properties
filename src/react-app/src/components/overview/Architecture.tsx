@@ -5,13 +5,6 @@ const Architecture: React.FC = () => {
   return (
     <div className="container mt-4">
       <h2>System Architecture</h2>
-      <div className="text-center mt-4">
-      <img 
-        src={chemSchema} 
-        alt="Chemical Properties System Architecture" 
-        style={{ maxWidth: '100%', height: 'auto' }}
-      />
-      </div>
       <div className='overview-section'>
       <p>
       This project aim to showcase the use of the <a href="http://localhost:53795/csp/irisapp/EnsPortal.ProductionConfig.zen?$NAMESPACE=IRISAPP&">IRIS</a> to 
@@ -46,6 +39,13 @@ const Architecture: React.FC = () => {
         </ul>
       </li>
       </ul>
+      <div className="text-center mt-4">
+      <img 
+        src={chemSchema} 
+        alt="Chemical Properties System Architecture" 
+        style={{ maxWidth: '100%', height: 'auto' }}
+      />
+      </div>
       </p>
     </div>
     </div>
