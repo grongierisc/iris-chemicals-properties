@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createPersistence, deletePersistence, getAllPersistence, getSimilarMolecules, getIupacName } from '../../services/api';
+import { createPersistence, deletePersistence, getAllPersistence, getSimilarMolecules, getIupacName, compareSMILESImage } from '../../services/api';
 import { Molecule } from '../../types/molecule';
 
 const SimilaritySearch: React.FC = () => {
@@ -88,13 +88,25 @@ const SimilaritySearch: React.FC = () => {
         embedding_random: result.embedding_random || [],
         cosine: result.cosine,
         cosine_random: result.cosine_random,
-        iupacName: ''
+        iupacName: '',
+        // empty img field to avoid loading images
+        img: undefined,
       }));
       setMolecules(basicResults);
       
       // Start loading IUPAC names after setting initial results
       basicResults.forEach((molecule, index) => {
         loadIupacName(molecule, index);
+      });
+      // Load images for search results
+      basicResults.forEach(async (molecule) => {
+        const { data: imgBlob } = await compareSMILESImage(searchSmiles, molecule.smiles);
+        setMolecules(prev => {
+          const updated = [...prev];
+          const index = updated.findIndex(m => m.smiles === molecule.smiles);
+          updated[index] = { ...molecule, img: imgBlob };
+          return updated;
+        });
       });
     } catch (error) {
       console.error('Error searching molecules:', error);
@@ -167,10 +179,11 @@ const SimilaritySearch: React.FC = () => {
                   <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IUPAC Name</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SMILES</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MACCS</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MiniLM</th>
+                      {!searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MACCS</th>}
+                      {!searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MiniLM</th>}
                       {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jaccard MACCS</th>}
                       {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cosine MiniLM</th>}
+                      {searchSmiles && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Images</th>}
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
               </thead>
@@ -189,16 +202,20 @@ const SimilaritySearch: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-sm text-gray-900">{molecule.smiles}</div>
                           </td>
+                          {!searchSmiles && (
                           <td className="px-6 py-4">
                               <div className="text-sm text-gray-500 truncate max-w-md">
                                   [{molecule.embedding.slice(160,).join(', ')}...]
                               </div>
                           </td>
+                          )}
+                          {!searchSmiles && (
                           <td className="px-6 py-4">
                               <div className="text-sm text-gray-500 truncate max-w-md">
                                   [{molecule.embedding_random.slice(0, 3).join(', ')}...]
                               </div>
                           </td>
+                          )}
                           {searchSmiles && (
                               <td className="px-6 py-4 whitespace-nowrap">
                                   <div className="text-sm text-gray-900">
@@ -211,6 +228,19 @@ const SimilaritySearch: React.FC = () => {
                                   <div className="text-sm text-gray-900">
                                       {molecule.cosine_random?.toFixed(4) || '-'}
                                   </div>
+                              </td>
+                          )}
+                          {searchSmiles && (
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                  {molecule.img ? (
+                                      <img
+                                          src={URL.createObjectURL(molecule.img)}
+                                          alt="Molecule"
+                                          className="h-12"
+                                      />
+                                  ) : (
+                                      <span className="text-gray-400">Not available</span>
+                                  )}
                               </td>
                           )}
                           <td className="px-6 py-4 whitespace-nowrap">

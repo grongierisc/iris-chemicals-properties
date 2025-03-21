@@ -5,5 +5,6 @@ export interface Molecule {
   cosine?: number;
   cosine_random?: number;
   iupacName?: string;
+  img?: Blob;
 }
 

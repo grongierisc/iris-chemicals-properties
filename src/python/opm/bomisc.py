@@ -185,7 +185,7 @@ class GenerateImageOperation(BusinessOperation):
         return Draw.MolsToGridImage([mol_a,mol_b],
                                     legends=['Smiles A','Smiles B'],
                                     highlightAtomLists=[mol_a.GetSubstructMatch(mol_b),mol_b.GetSubstructMatch(mol_a)],
-                                    molsPerRow=1)
+                                    molsPerRow=2)
     
     def _draw_molecule_2_sdf_diff(self,filename_a,filename_b):
         """
