@@ -4,6 +4,14 @@ from rdkit import Chem
 import opm.bordkit as bo_rdkit
 import opm.msg as msg
 
+from iop._serialization import (
+    SerializationError,
+    serialize_message,
+    deserialize_message,
+    serialize_pickle_message,
+    deserialize_pickle_message,
+)
+
 class TestBoRdkit:
 
     smi = "CC(C)Cc1ccc(C(C)C(=O)O)cc1"
@@ -39,6 +47,14 @@ class TestBoRdkit:
 
     def test_calculate_num_h_acceptor(self):
         assert self.bo._calculate_num_h_acceptor(self.mol) == 1
+
+    def test_message_smile_request(self):
+        msg_smile = msg.SmilesRequest(smiles=self.smi)
+        rsp = self.bo.get_properties_from_smiles(msg_smile)
+        ser = serialize_message(rsp)
+        _rsp = deserialize_message(ser)
+        assert rsp.smiles == self.smi
+        assert _rsp.properties.formula == "C13H18O2"
 
 
 
